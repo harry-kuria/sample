@@ -42,29 +42,34 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen() {
-    var email = remember { mutableStateOf("") }
-    Column {
+    // 🔹 'email' is a state variable that holds the input text
+    // 🔹 'remember' keeps this value during recompositions
+    var email by remember { mutableStateOf("") }
+
+    Column(modifier = Modifier.padding(16.dp)) {
         Text("LOG IN", fontSize = 30.sp)
         Text("to start your journey...")
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text("Enter your username")
+
         OutlinedTextField(
-            state = rememberTextFieldState(),
-            value=email.value,
-            onValueChange={email=it},
+            // ✅ Required parameter: what text should be shown inside the text field
+            value = email,
 
+            // ✅ Called every time the user types — updates 'email'
+            onValueChange = { email = it },
+
+            // ✅ This is the label (hint) shown inside the text field
+            label = { Text("Email") },
+
+            // ✅ Makes the field fill the full width of the screen
+            modifier = Modifier.fillMaxWidth()
         )
-
-        Text("Enter your password")
-//        OutlinedTextField(
-//            state = rememberTextFieldState()
-//        )
-
-
-
     }
-
 }
+
 
 
 
