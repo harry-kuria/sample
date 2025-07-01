@@ -30,6 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+//import com.example.gettingstartedwithjetpackcompose.Routes.AppNavHost
 import com.example.gettingstartedwithjetpackcompose.ui.theme.GettingStartedWithJetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,21 +44,41 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GettingStartedWithJetpackComposeTheme {
-                LoginScreen()
-                RegisterScreen()
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-////                    Greeting(
-////                        name = "Android",
-////                        modifier = Modifier.padding(innerPadding)
-////                    )
-//                }
+              //Scaffold(modifier = Modifier.fillMaxSize())
+                AppNavHost()
+
             }
         }
     }
 }
 
+object Routes {
+    const val LOGIN = "login"
+    const val REGISTER = "register"}
+
 @Composable
-fun LoginScreen() {
+fun AppNavHost(
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(
+        navController  = navController,
+        startDestination = Routes.LOGIN
+    ) {
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                onNavigateToRegister = { navController.navigate(Routes.REGISTER) }
+            )
+        }
+        composable(Routes.REGISTER) {
+            RegisterScreen(
+                onNavigateToLogin = { navController.popBackStack() }  // or navigate(LOGIN)
+            )
+        }
+    }
+}
+
+@Composable
+fun LoginScreen(onNavigateToRegister: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -94,7 +120,7 @@ fun LoginScreen() {
 
         Row {
             Text("Don't have an account?")
-            //TextButton(onClick = when clicked should take you to the log in page) { }
+            TextButton(onClick = onNavigateToRegister) { Text("Register now")}
         }
     }
 
@@ -103,8 +129,8 @@ fun LoginScreen() {
 
 
 @Composable
-fun RegisterScreen(){
-    Column {
+fun RegisterScreen(onNavigateToLogin: () -> Unit){
+    Column(modifier = Modifier.padding(20.dp)){
         var username by remember {mutableStateOf("")}
         var email by remember {mutableStateOf("")}
         var password by remember {mutableStateOf("")}
@@ -119,13 +145,17 @@ fun RegisterScreen(){
             onValueChange = {username = it},
             label = { Text("Username") }
         )
-        
+        Spacer(modifier = Modifier.height(20.dp))
+
+
         Text("Enter your email")
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
             label = {Text("Email")}
         )
+        Spacer(modifier = Modifier.height(20.dp))
+
 
         Text("Enter your password")
         OutlinedTextField(
@@ -133,6 +163,8 @@ fun RegisterScreen(){
             onValueChange = {password = it},
             label = {Text("Password")}
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text("Confirm your password")
         OutlinedTextField(
@@ -142,17 +174,17 @@ fun RegisterScreen(){
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-        //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the log in was succesful) { }
+        //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the log in was successful) { }
 
         Row {
             Text("Already have an account?")
-            //TextButton(onClick = when clicked should take you to the log in page) { }
-
+            TextButton(onClick = onNavigateToLogin) {Text("Log in")}
         }
 
 
     }
 }
+
 
 //@Preview(showBackground = true)
 //@Composable
