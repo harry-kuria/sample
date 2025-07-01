@@ -14,6 +14,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,32 +44,34 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen() {
-    var email = remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+
+
+
     Column {
         Text("LOG IN", fontSize = 30.sp)
         Text("to start your journey...")
 
-        Text("Enter your username")
-        OutlinedTextField(
-            state = rememberTextFieldState(),
-            value=email.value,
-            onValueChange={email=it},
-
-        )
+//        Text("Enter your username")
+//        OutlinedTextField(
+//            state = rememberTextFieldState(),
+//            value=email.value,
+//            onValueChange={email=it},
+//
+//        )
 
         Text("Enter your password")
-//        OutlinedTextField(
-//            state = rememberTextFieldState()
-//        )
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
 
 
 
     }
 
 }
-
-
-
 
 //@Preview(showBackground = true)
 //@Composable
