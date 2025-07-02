@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -26,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Label
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -159,7 +161,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                 IconButton(onClick = {showPassword = !showPassword}) {
                     Icon(painter = painterResource(visibilityIcon),
                         contentDescription = if (showPassword) "show password" else "hide password",
-                        tint = Color.Unspecified, modifier = Modifier.size(24.dp))}
+                        modifier = Modifier.size(20.dp))}
 
             }
         )
@@ -186,6 +188,8 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         var password by remember {mutableStateOf("")}
         var confirmPass by remember {mutableStateOf("")}
         var userIcon = painterResource(id = R.drawable.user_icon)
+        var showPassword by remember { mutableStateOf(false) }
+        var confirmShowPassword by remember {mutableStateOf(false)}
 
         Image(painter = userIcon,
             contentDescription = "User icon", modifier = Modifier.size(100.dp),
@@ -233,11 +237,18 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
             onValueChange = {password = it},
             label = {Text("Password")},
             singleLine = true,
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Lock,
-                    contentDescription = "Password icon"
-                )
+                    contentDescription = "Password icon")
+            },
+            trailingIcon = { var visibilityIcon = if (showPassword) R.drawable.visibility_on else R.drawable.visibility_off
+                IconButton(onClick = {showPassword = !showPassword}) {
+                    Icon(painter = painterResource(visibilityIcon),
+                        contentDescription = if (showPassword) "show password" else "hide password",
+                        modifier = Modifier.size(20.dp))}
+
             }
         )
 
@@ -249,12 +260,21 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
             onValueChange = {confirmPass = it},
             label = {Text("Confirm Password")},
             singleLine = true,
+            visualTransformation = if (confirmShowPassword) VisualTransformation.None else PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Lock,
                     contentDescription = "Password icon"
                 )
+            },
+            trailingIcon = { var visibilityIcon = if (confirmShowPassword) R.drawable.visibility_on else R.drawable.visibility_off
+                IconButton(onClick = {confirmShowPassword = !confirmShowPassword}) {
+                    Icon(painter = painterResource(visibilityIcon),
+                        contentDescription = if (confirmShowPassword) "show password" else "hide password",
+                        modifier = Modifier.size(20.dp))}
+
             }
+
         )
 
 
