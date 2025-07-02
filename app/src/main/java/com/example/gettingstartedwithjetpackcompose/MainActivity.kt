@@ -15,8 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Label
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -107,7 +112,14 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") }
+            label = { Text("Username") },
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = "Username icon"
+                )
+            }
 
         )
 
@@ -117,7 +129,14 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text("Email") },
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.MailOutline,
+                    contentDescription = "Email icon"
+                )
+            }
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -125,7 +144,14 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = "Password icon"
+                )
+            }
             //find out how to change the type to password so it has dots
         )
 
@@ -164,7 +190,14 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         OutlinedTextField(
             value = username,
             onValueChange = {username = it},
-            label = { Text("Username") }
+            label = { Text("Username") },
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = "Username icon"
+                )
+            }
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -173,7 +206,14 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
-            label = {Text("Email")}
+            label = {Text("Email")},
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.MailOutline,
+                    contentDescription = "Mail icon"
+                )
+            }
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -182,7 +222,14 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         OutlinedTextField(
             value = password,
             onValueChange = {password = it},
-            label = {Text("Password")}
+            label = {Text("Password")},
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = "Password icon"
+                )
+            }
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -191,7 +238,14 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         OutlinedTextField(
             value = confirmPass,
             onValueChange = {confirmPass = it},
-            label = {Text("Confirm Password")}
+            label = {Text("Confirm Password")},
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = "Password icon"
+                )
+            }
         )
 
         Spacer(modifier = Modifier.height(20.dp))
