@@ -1,6 +1,7 @@
 package com.example.gettingstartedwithjetpackcompose
 
 import android.R.attr.onClick
+import android.graphics.fonts.Font
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,25 +92,28 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
     var userIcon = painterResource(id = R.drawable.user_icon)
 
 
-    Column(modifier = Modifier.padding(top=20.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
+    Column(modifier = Modifier.padding(top=70.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(painter = userIcon,
-            contentDescription = "User icon", modifier = Modifier.size(100.dp))
+        Image(painter = userIcon, contentDescription = "User icon",
+            modifier = Modifier.size(100.dp), alignment = Alignment.Center)
 
-        Text("LOG IN", fontSize = 30.sp)
-        Text("to start your journey...")
+        Text("LOG IN", fontSize = 50.sp, fontFamily = Roboto)
+        Text("to start your journey...", fontFamily = Roboto, fontSize = 30.sp)
+        Spacer(modifier = Modifier.height(20.dp))
 
 
-        Text("Enter your username")
+
+        Text("Enter your username", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") }
+
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text("Enter your email address")
+        Text("Enter your email address", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -116,7 +121,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text("Enter your password")
+        Text("Enter your password", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -127,9 +132,9 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         Spacer(modifier = Modifier.height(20.dp))
         //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the login was successful) { }
 
-        Row {
-            Text("Don't have an account?")
-            TextButton(onClick = onNavigateToRegister) { Text("Register now")}
+        Row() {
+            Text("Don't have an account?", fontFamily = Roboto, fontSize = 10.sp)
+            TextButton(onClick = onNavigateToRegister) { Text("Register now", fontFamily = Roboto, fontSize = 10.sp)}
         }
     }
 
@@ -139,7 +144,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
 
 @Composable
 fun RegisterScreen(onNavigateToLogin: () -> Unit){
-    Column(modifier = Modifier.padding(top=20.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
+    Column(modifier = Modifier.padding(top=10.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally){
         var username by remember {mutableStateOf("")}
         var email by remember {mutableStateOf("")}
@@ -148,12 +153,14 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         var userIcon = painterResource(id = R.drawable.user_icon)
 
         Image(painter = userIcon,
-            contentDescription = "User icon", modifier = Modifier.size(100.dp))
+            contentDescription = "User icon", modifier = Modifier.size(100.dp),
+            alignment = Alignment.Center)
 
-        Text("WELCOME")
-        Text("Join us to start your learning journey")
+        Text("WELCOME" , fontFamily = Roboto, fontSize = 45.sp)
+        Text("Join us to start your journey", fontFamily = Roboto, fontSize = 25.sp)
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Text("Enter your username")
+        Text("Enter your username", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = username,
             onValueChange = {username = it},
@@ -162,7 +169,7 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         Spacer(modifier = Modifier.height(20.dp))
 
 
-        Text("Enter your email")
+        Text("Enter your email", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
@@ -171,7 +178,7 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         Spacer(modifier = Modifier.height(20.dp))
 
 
-        Text("Enter your password")
+        Text("Enter your password", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = password,
             onValueChange = {password = it},
@@ -180,7 +187,7 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text("Confirm your password")
+        Text("Confirm your password", fontFamily = Roboto, fontSize = 20.sp)
         OutlinedTextField(
             value = confirmPass,
             onValueChange = {confirmPass = it},
@@ -191,8 +198,8 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the log in was successful) { }
 
         Row {
-            Text("Already have an account?")
-            TextButton(onClick = onNavigateToLogin) {Text("Log in")}
+            Text("Already have an account?", fontFamily = Roboto, fontSize = 10.sp)
+            TextButton(onClick = onNavigateToLogin) {Text("Log in", fontFamily = Roboto, fontSize = 10.sp)}
         }
 
 
