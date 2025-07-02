@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -22,7 +23,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Label
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,8 +39,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,9 +100,8 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    //should the password be saveable?. Less security
     var userIcon = painterResource(id = R.drawable.user_icon)
-
+    var showPassword by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(top=70.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -117,9 +123,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Person,
-                    contentDescription = "Username icon"
-                )
-            }
+                    contentDescription = "Username icon")}
 
         )
 
@@ -134,8 +138,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.MailOutline,
-                    contentDescription = "Email icon"
-                )
+                    contentDescription = "Email icon")
             }
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -146,19 +149,25 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
             onValueChange = { password = it },
             label = { Text("Password") },
             singleLine = true,
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Lock,
                     contentDescription = "Password icon"
-                )
+                )},
+            trailingIcon = { var visibilityIcon = if (showPassword) R.drawable.visibility_on else R.drawable.visibility_off
+                IconButton(onClick = {showPassword = !showPassword}) {
+                    Icon(painter = painterResource(visibilityIcon),
+                        contentDescription = if (showPassword) "show password" else "hide password",
+                        tint = Color.Unspecified, modifier = Modifier.size(24.dp))}
+
             }
-            //find out how to change the type to password so it has dots
         )
 
         Spacer(modifier = Modifier.height(20.dp))
         //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the login was successful) { }
 
-        Row() {
+        Row{
             Text("Don't have an account?", fontFamily = Roboto, fontSize = 10.sp)
             TextButton(onClick = onNavigateToRegister) { Text("Register now", fontFamily = Roboto, fontSize = 10.sp)}
         }
@@ -247,6 +256,8 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
                 )
             }
         )
+
+
 
         Spacer(modifier = Modifier.height(20.dp))
         //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the log in was successful) { }
