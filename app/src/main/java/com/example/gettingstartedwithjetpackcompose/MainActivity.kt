@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Label
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.OutlinedSecureTextField
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -105,79 +107,80 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
     var userIcon = painterResource(id = R.drawable.user_icon)
     var showPassword by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(top=70.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(painter = userIcon, contentDescription = "User icon",
-            modifier = Modifier.size(100.dp), alignment = Alignment.Center)
+    ///Wrapped the login screen in a box to center it
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(painter = userIcon, contentDescription = "User icon",
+                modifier = Modifier.size(100.dp), alignment = Alignment.Center)
 
-        Text("LOG IN", fontSize = 50.sp, fontFamily = Roboto)
-        Text("to start your journey...", fontFamily = Roboto, fontSize = 30.sp)
-        Spacer(modifier = Modifier.height(20.dp))
+            Text("LOG IN", fontSize = 50.sp, fontFamily = Roboto)
+            Text("to start your journey...", fontFamily = Roboto, fontSize = 30.sp)
+            Spacer(modifier = Modifier.height(20.dp))
 
 
 
-        Text("Enter your username", fontFamily = Roboto, fontSize = 20.sp)
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "Username icon")}
+            Text("Enter your username", fontFamily = Roboto, fontSize = 20.sp)
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                singleLine = true,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = "Username icon")}
 
-        )
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Text("Enter your email address", fontFamily = Roboto, fontSize = 20.sp)
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.MailOutline,
-                    contentDescription = "Email icon")
+            Text("Enter your email address", fontFamily = Roboto, fontSize = 20.sp)
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                singleLine = true,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.MailOutline,
+                        contentDescription = "Email icon")
+                }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text("Enter your password", fontFamily = Roboto, fontSize = 20.sp)
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                singleLine = true,
+                visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "Password icon"
+                    )},
+                trailingIcon = { var visibilityIcon = if (showPassword) R.drawable.visibility_on else R.drawable.visibility_off
+                    IconButton(onClick = {showPassword = !showPassword}) {
+                        Icon(painter = painterResource(visibilityIcon),
+                            contentDescription = if (showPassword) "show password" else "hide password",
+                            modifier = Modifier.size(20.dp))}
+
+                }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the login was successful) { }
+
+            Row{
+                Text("Don't have an account?", fontFamily = Roboto, fontSize = 10.sp)
+                TextButton(onClick = onNavigateToRegister) { Text("Register now", fontFamily = Roboto, fontSize = 10.sp)}
             }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text("Enter your password", fontFamily = Roboto, fontSize = 20.sp)
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            singleLine = true,
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Lock,
-                    contentDescription = "Password icon"
-                )},
-            trailingIcon = { var visibilityIcon = if (showPassword) R.drawable.visibility_on else R.drawable.visibility_off
-                IconButton(onClick = {showPassword = !showPassword}) {
-                    Icon(painter = painterResource(visibilityIcon),
-                        contentDescription = if (showPassword) "show password" else "hide password",
-                        modifier = Modifier.size(20.dp))}
-
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-        //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the login was successful) { }
-
-        Row{
-            Text("Don't have an account?", fontFamily = Roboto, fontSize = 10.sp)
-            TextButton(onClick = onNavigateToRegister) { Text("Register now", fontFamily = Roboto, fontSize = 10.sp)}
         }
     }
 
 
 }
-
 
 @Composable
 fun RegisterScreen(onNavigateToLogin: () -> Unit){
@@ -291,11 +294,11 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
     }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    GettingStartedWithJetpackComposeTheme {
-//        Greeting("Android")
-//    }
-//}
+//added preview that shows the login screen
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+ MaterialTheme {
+        LoginScreen {  }
+    }
+}
