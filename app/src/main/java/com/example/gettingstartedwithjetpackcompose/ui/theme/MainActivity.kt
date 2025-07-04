@@ -1,8 +1,7 @@
-package com.example.gettingstartedwithjetpackcompose
+package com.example.gettingstartedwithjetpackcompose.ui.theme
 
-import android.R.attr.onClick
-import android.graphics.fonts.Font
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,53 +9,46 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextObfuscationMode
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Label
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.OutlinedSecureTextField
+//import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
+import com.example.gettingstartedwithjetpackcompose.R
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.gettingstartedwithjetpackcompose.data.model.local.UserDao
+import com.example.gettingstartedwithjetpackcompose.data.model.local.AppDatabase
+import com.example.gettingstartedwithjetpackcompose.data.model.local.User
 //import com.example.gettingstartedwithjetpackcompose.Routes.AppNavHost
-import com.example.gettingstartedwithjetpackcompose.ui.theme.GettingStartedWithJetpackComposeTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,36 +66,51 @@ class MainActivity : ComponentActivity() {
 
 object Routes {
     const val LOGIN = "login"
-    const val REGISTER = "register"}
+    const val REGISTER = "register"
+    const val HOME = "home screen"
+}
 
 @Composable
-fun AppNavHost(
-    navController: NavHostController = rememberNavController()
-) {
+fun AppNavHost(navController: NavHostController = rememberNavController()){
+    val context = LocalContext.current
+    val userDao: UserDao = remember { AppDatabase.getDatabase(context).UserDao() }
+
     NavHost(
         navController  = navController,
         startDestination = Routes.LOGIN
     ) {
         composable(Routes.LOGIN) {
             LoginScreen(
+                userDao = userDao,
+                onNavigateToHome = {navController.navigate(Routes.HOME)},
                 onNavigateToRegister = { navController.navigate(Routes.REGISTER) }
             )
         }
         composable(Routes.REGISTER) {
             RegisterScreen(
-                onNavigateToLogin = { navController.popBackStack() }  // or navigate(LOGIN)
+                userDao = userDao,
+                onNavigateToLogin = { navController.navigate(Routes.LOGIN) }
             )
+        }
+
+        composable(Routes.HOME) {
+            HomeScreen()
         }
     }
 }
 
 @Composable
-fun LoginScreen(onNavigateToRegister: () -> Unit) {
+fun LoginScreen(userDao: UserDao, onNavigateToHome: () -> Unit,
+    onNavigateToRegister: () -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var userIcon = painterResource(id = R.drawable.user_icon)
     var showPassword by remember { mutableStateOf(false) }
+
+    val context   = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.padding(top=70.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -167,7 +174,17 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-        //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the login was successful) { }
+        FilledTonalButton(
+            onClick = {scope.launch {
+                val user = withContext(Dispatchers.IO) {
+                    userDao.login(email.trim(), password)
+                }
+                if (user != null)
+                    onNavigateToHome()
+                else
+                    Toast.makeText(context, "Incorrect email or password", Toast.LENGTH_SHORT).show()
+            } }
+        ) {Text("Log In")}
 
         Row{
             Text("Don't have an account?", fontFamily = Roboto, fontSize = 10.sp)
@@ -180,7 +197,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
 
 
 @Composable
-fun RegisterScreen(onNavigateToLogin: () -> Unit){
+fun RegisterScreen(userDao: UserDao, onNavigateToLogin: () -> Unit){
     Column(modifier = Modifier.padding(top=10.dp, bottom= 20.dp, start= 10.dp, end = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally){
         var username by remember {mutableStateOf("")}
@@ -191,15 +208,18 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         var showPassword by remember { mutableStateOf(false) }
         var confirmShowPassword by remember {mutableStateOf(false)}
 
+        var context = LocalContext.current
+        val scope = rememberCoroutineScope()
+
         Image(painter = userIcon,
             contentDescription = "User icon", modifier = Modifier.size(100.dp),
             alignment = Alignment.Center)
 
-        Text("WELCOME" , fontFamily = Roboto, fontSize = 45.sp)
-        Text("Join us to start your journey", fontFamily = Roboto, fontSize = 25.sp)
-        Spacer(modifier = Modifier.height(20.dp))
+        Text("WELCOME" , fontFamily = Roboto, fontSize = 35.sp)
+        Text("Join us to start your journey", fontFamily = Roboto, fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(15.dp))
 
-        Text("Enter your username", fontFamily = Roboto, fontSize = 20.sp)
+        Text("Enter your username", fontFamily = Roboto, fontSize = 15.sp)
         OutlinedTextField(
             value = username,
             onValueChange = {username = it},
@@ -212,10 +232,10 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
                 )
             }
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
 
-        Text("Enter your email", fontFamily = Roboto, fontSize = 20.sp)
+        Text("Enter your email", fontFamily = Roboto, fontSize = 15.sp)
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
@@ -228,10 +248,10 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
                 )
             }
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
 
-        Text("Enter your password", fontFamily = Roboto, fontSize = 20.sp)
+        Text("Enter your password", fontFamily = Roboto, fontSize = 15.sp)
         OutlinedTextField(
             value = password,
             onValueChange = {password = it},
@@ -252,9 +272,9 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
             }
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
-        Text("Confirm your password", fontFamily = Roboto, fontSize = 20.sp)
+        Text("Confirm your password", fontFamily = Roboto, fontSize = 15.sp)
         OutlinedTextField(
             value = confirmPass,
             onValueChange = {confirmPass = it},
@@ -277,10 +297,29 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
 
         )
 
+        Spacer(modifier = Modifier.height(15.dp))
+        FilledTonalButton(
+            onClick = {
+                if (password != confirmPass) {
+                    Toast.makeText(context, "Passwords don’t match", Toast.LENGTH_SHORT).show()
+                    return@FilledTonalButton
+                }
 
+                val newUser = User(username = username, email = email.trim(), passwordHash = password)
+                scope.launch {
+                    val ok = withContext(Dispatchers.IO) {
+                        runCatching { userDao.insertUser(newUser) }.isSuccess
+                    }
+                    if (ok) {
+                        Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show()
+                        onNavigateToLogin()
+                    } else {
+                        Toast.makeText(context, "Email already in use", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        ) { Text("Register") }
 
-        Spacer(modifier = Modifier.height(20.dp))
-        //FilledTonalButton(onClick = when clicked should take you to the main page or toast that the log in was successful) { }
 
         Row {
             Text("Already have an account?", fontFamily = Roboto, fontSize = 10.sp)
@@ -288,6 +327,14 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit){
         }
 
 
+    }
+}
+
+
+@Composable
+fun HomeScreen(){
+    Column(horizontalAlignment = Alignment.CenterHorizontally){
+        Text("MAIN PAGE", fontSize = 150.sp)
     }
 }
 
