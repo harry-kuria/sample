@@ -1,11 +1,10 @@
 plugins {
-    //alias(libs.plugins.android.application)
-    //alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-
     id("com.android.application")
-    kotlin("android")
+    id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+
+    id("org.jetbrains.kotlin.plugin.compose") //version "2.1.21"
 }
 
 android {
@@ -56,7 +55,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.ui.text.android)
-//  implementation(libs.androidx.material3.jvmstubs)
+    //implementation(libs.androidx.navigation.compose.jvmstubs)
+    // implementation(libs.androidx.material3.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,4 +69,7 @@ dependencies {
     kapt("androidx.room:room-compiler:2.7.2")
     annotationProcessor ("androidx.room:room-compiler:2.7.2")
 
-}
+    implementation("com.google.dagger:hilt-android:2.56")
+    kapt("com.google.dagger:hilt-compiler:2.56")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    }

@@ -1,11 +1,11 @@
-package com.example.gettingstartedwithjetpackcompose.data.model.local
+package com.example.gettingstartedwithjetpackcompose.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 2)
 abstract class AppDatabase: RoomDatabase(){
     abstract fun UserDao(): UserDao
     //abstract fun userDao()
