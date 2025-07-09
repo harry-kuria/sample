@@ -2,13 +2,23 @@ package com.example.gettingstartedwithjetpackcompose.data.repository
 
 import com.example.gettingstartedwithjetpackcompose.data.local.UserDao
 import com.example.gettingstartedwithjetpackcompose.data.local.User
+import javax.inject.Inject
 
 
-class UserRepository(private val userDao: UserDao){
-    suspend fun login(email:String, password: String): User? =
-        userDao.login(email, password)
+class UserRepository @Inject constructor(private val userDao: UserDao){
+    suspend fun getUserByEmail(email: String): User?{
+        return userDao.findByEmail(email)
+    }
 
-    suspend fun register(user: User): Result<Unit> = runCatching { //Result<Unit> returns nothing like a "procedure" not a function. this is good because you don't have to catch exceptions
+    suspend fun loginUser(email:String, password: String): User? {
+        return userDao.login(email, password)
+    }
+
+    suspend fun registerUser(user: User) {
         userDao.insertUser(user)
     }
+
+//    suspend fun deleteAllUsers() {
+//        userDao.deleteAll()
+//    }
 }

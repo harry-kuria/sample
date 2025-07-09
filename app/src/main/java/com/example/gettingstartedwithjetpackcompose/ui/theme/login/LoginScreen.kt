@@ -160,10 +160,11 @@ fun LoginScreen(onNavigateToHome: () -> Unit, viewModel: AuthViewModel = hiltVie
                     Spacer(modifier = Modifier.height(20.dp))
                     FilledTonalButton(
                         modifier = Modifier.width(280.dp),
-                        onClick = viewModel::login, enabled = !state.isLoading
+                        onClick = viewModel::login,
+                        enabled = !state.isLoading
                     ) {
                         if (state.isLoading) CircularProgressIndicator()
-                        else Text("Log In")
+                        else Text("Log In",fontFamily = Roboto, fontSize = 15.sp)
                     }
 
                 }

@@ -24,4 +24,10 @@ interface UserDao{
 
     @Query("""SELECT * FROM users WHERE email = :email AND passwordHash = :password LIMIT 1""")
     suspend fun login(email: String, password: String): User?
+
+//    @Query("SELECT * FROM Users WHERE email = :email LIMIT 1")
+//    suspend fun deleteUserByEmail(email: String)
+
+//    @Query("DELETE FROM Users")
+//    suspend fun deleteAll()
 }

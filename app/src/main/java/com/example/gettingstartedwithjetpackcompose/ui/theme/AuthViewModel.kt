@@ -1,9 +1,10 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gettingstartedwithjetpackcompose.data.local.UserDao
 import com.example.gettingstartedwithjetpackcompose.data.local.User
+import com.example.gettingstartedwithjetpackcompose.data.repository.UserRepository
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.LoginUiState
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ import kotlinx.coroutines.withContext
 
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val userDao: UserDao): ViewModel() {
+class AuthViewModel @Inject constructor(private val userRepository: UserRepository): ViewModel() {
     private val _loginState = MutableStateFlow(LoginUiState())
     val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
 
@@ -30,6 +31,7 @@ class AuthViewModel @Inject constructor(private val userDao: UserDao): ViewModel
     fun onLoginPasswordChange(p: String) = _loginState.update { it.copy(password = p.trim(), error = null) }
 
     fun login() = viewModelScope.launch {
+        _loginState.update {it.copy(error = null)}
         val lState = _loginState.value
         if (lState.email.isEmpty() || lState.password.isEmpty()) {
             _loginState.update { it.copy(error = "Email and password are required") }
@@ -39,12 +41,15 @@ class AuthViewModel @Inject constructor(private val userDao: UserDao): ViewModel
         _loginState.update { it.copy(isLoading = true) }
 
         val user = withContext(Dispatchers.IO) {
-            userDao.login(lState.email, lState.password)
+            userRepository.loginUser(lState.email, lState.password)
         }
+
+        val success = user != null
+
         _loginState.update {
             it.copy(
-                isLoading = false, isLoggedIn = user != null,
-                error = if (user == null) "Incorrect email or password" else null
+                isLoading = false, isLoggedIn = success,
+                error = if (!success) "Incorrect email or password" else null
             )
         }
     }
@@ -58,20 +63,27 @@ class AuthViewModel @Inject constructor(private val userDao: UserDao): ViewModel
 
 
     fun register() = viewModelScope.launch {
+        _registerState.update {it.copy(error = null)}
         val rState = _registerState.value
         if (rState.email.isEmpty() || rState.username.isEmpty() || rState.password.isEmpty() || rState.confirmPassword.isEmpty()) {
             _registerState.update { it.copy(error = "All fields are required") }
             return@launch
         }
-        _registerState.update { it.copy(isLoading = true) }
+        //_registerState.update { it.copy(isLoading = true) }
 
         val emailExists = withContext(Dispatchers.IO) {
-            userDao.findByEmail(rState.email) != null
+            userRepository.getUserByEmail(rState.email) != null
+        }
+//        Flow<User?>
+
+        if (! Patterns.EMAIL_ADDRESS.matcher(rState.email).matches()){
+            _registerState.update { it.copy(error = "Invalid email format") }
+            return@launch
         }
 
         if (emailExists) {
             _registerState.update {
-                it.copy(isLoading = false, error = "An account with this email already exists. Log in instead")
+                it.copy(error = "An account with this email already exists. Log in instead")
             }
             return@launch
         }
@@ -84,15 +96,23 @@ class AuthViewModel @Inject constructor(private val userDao: UserDao): ViewModel
             }
         }
 
+        val passValidate = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$".toRegex()
+        if (! passValidate.matches(rState.password)){
+            _registerState.update { it.copy(error = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number", isLoading = false) }
+            return@launch
+        }
+
+        val newUser = User(username = rState.username, email = rState.email, passwordHash = rState.password)
+
 
         val ok = withContext(Dispatchers.IO) {
-            runCatching { userDao.insertUser(User(username = rState.username, email = rState.email.trim(),
-                passwordHash = rState.password))}.isSuccess
+            runCatching { userRepository.registerUser(newUser)}.isSuccess
         }
         _registerState.update {
             it.copy(
                 isLoading = false, isRegistered = ok,
-                error = if (ok) null else "Registration failed"
+                error = if (!ok) "Registration failed" else null
+                //error = if (!ok) null else "Registration failed"
             )
         }
 
