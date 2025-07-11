@@ -12,5 +12,6 @@ data class User(
     @PrimaryKey val email: String, //sets this as the primary key
     //Declaring composite PKs is done within the parentheses of @Entity() and uses pK=[...] not @PK...
     val username: String,
-    val passwordHash: String
+    val passwordHash: String,
+    val isLoggedIn: Boolean
 )

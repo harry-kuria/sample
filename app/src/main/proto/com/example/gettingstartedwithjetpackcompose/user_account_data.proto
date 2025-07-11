@@ -1,0 +1,18 @@
+//Essentially, this file describes the structure of the data the app will be working with/ that we will store
+
+syntax = "proto3";
+//states the type of protocol buffers being used
+//protocol buffers are a way to store data
+package com.example.gettingstartedwithjetpackcompose;
+
+
+option java_package = "com.example.gettingstartedwithjetpackcompose";
+option java_multiple_files = true; // makes accessing the proto files easier
+
+message UserAccountData {
+  string email = 1;
+  string username = 2;
+  bool is_logged_in = 3;
+}
+//.proto files keep the structure and not the actual data. they are like class definitions
+

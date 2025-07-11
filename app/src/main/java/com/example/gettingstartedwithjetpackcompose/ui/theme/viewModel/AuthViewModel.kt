@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme
+package com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,6 @@ import com.example.gettingstartedwithjetpackcompose.data.repository.UserReposito
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.LoginUiState
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject //or jakarta
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val userRepository: UserRepository): ViewModel() {
@@ -102,17 +101,17 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
             return@launch
         }
 
-        val newUser = User(username = rState.username, email = rState.email, passwordHash = rState.password)
+        val newUser =
+            User(username = rState.username, email = rState.email, passwordHash = rState.password)
 
 
         val ok = withContext(Dispatchers.IO) {
-            runCatching { userRepository.registerUser(newUser)}.isSuccess
+            runCatching { userRepository.registerUser(newUser) }.isSuccess
         }
         _registerState.update {
             it.copy(
                 isLoading = false, isRegistered = ok,
                 error = if (!ok) "Registration failed" else null
-                //error = if (!ok) null else "Registration failed"
             )
         }
 

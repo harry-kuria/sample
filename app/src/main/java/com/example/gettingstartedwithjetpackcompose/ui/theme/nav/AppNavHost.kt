@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gettingstartedwithjetpackcompose.ui.theme.HomeScreen
+import com.example.gettingstartedwithjetpackcompose.ui.theme.home.HomeScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.login.LoginScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.register.RegisterScreen
 

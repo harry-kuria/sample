@@ -3,8 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.compose") //version "2.1.21" //don't add version gave error of different version at compilation
 
-    id("org.jetbrains.kotlin.plugin.compose") //version "2.1.21"
+    id("com.google.protobuf") version "0.9.1"
 }
 
 android {
@@ -30,6 +31,8 @@ android {
             )
         }
     }
+    composeOptions {kotlinCompilerExtensionVersion = "1.6.1"}
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -40,6 +43,8 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {kotlinCompilerExtensionVersion = "1.6.1"}
+
 }
 
 dependencies {
@@ -48,13 +53,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+
+    implementation("androidx.compose.ui:ui")  //implementation(libs.androidx.ui)
+    implementation("androidx.compose.ui:ui-graphics")  //implementation(libs.androidx.ui.graphics)
+    implementation("androidx.compose.ui:ui-tooling-preview")  //implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.androidx.navigation.runtime.android)
-    implementation(libs.androidx.ui.text.android)
+    implementation("androidx.compose.ui:ui-text")  //implementation(libs.androidx.ui.text.android)
     //implementation(libs.androidx.navigation.compose.jvmstubs)
     // implementation(libs.androidx.material3.jvmstubs)
     testImplementation(libs.junit)
@@ -65,11 +71,34 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Room
     implementation ("androidx.room:room-runtime:2.7.2")
     kapt("androidx.room:room-compiler:2.7.2")
-    annotationProcessor ("androidx.room:room-compiler:2.7.2")
+    //annotationProcessor ("androidx.room:room-compiler:2.7.2")
 
+//    kapt("androidx.room:room-compiler:2.7.2")
+//    annotationProcessor ("androidx.room:room-compiler:2.7.2")
+
+    //Hilt ViewModel
     implementation("com.google.dagger:hilt-android:2.56")
     kapt("com.google.dagger:hilt-compiler:2.56")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //kapt("com.google.dagger:hilt-compiler:2.56")
+    //implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+
+    //DataStore
+    implementation("androidx.datastore:datastore:1.1.0") //main datastore
+    implementation("com.google.protobuf:protobuf-javalite:3.24.0") //for .proto files
     }
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:3.24.0"}
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                create("java") {option("lite")} }
+        }
+    }
+}

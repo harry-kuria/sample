@@ -1,8 +1,15 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme.home
 
-data class LoginUiState(
-    val email: String = "",
-    val password: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun HomeScreen(){
+    Column(horizontalAlignment = Alignment.CenterHorizontally){
+        Text("MAIN PAGE", fontSize = 40.sp)
+
+    }
+}

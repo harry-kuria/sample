@@ -21,21 +21,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gettingstartedwithjetpackcompose.R
-import com.example.gettingstartedwithjetpackcompose.ui.theme.AuthViewModel
+import com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel.AuthViewModel
 import com.example.gettingstartedwithjetpackcompose.ui.theme.Roboto
+import com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel.SaveLoginViewModel
+
 
 @Composable
-//fun LoginScreen(userDao: UserDao, onNavigateToHome: () -> Unit, viewModel: AuthViewModel = viewModel(),
-//                onNavigateToRegister: () -> Unit
-//) {
 fun LoginScreen(onNavigateToHome: () -> Unit, viewModel: AuthViewModel = hiltViewModel(),
+                saveLoginViewModel: SaveLoginViewModel = hiltViewModel(),
                 onNavigateToRegister: () -> Unit
 ) {
     var showPassword by remember { mutableStateOf(false) }
     val state by viewModel.loginState.collectAsState()
 
+
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
+            saveLoginViewModel.login(state.email, state.username)
             onNavigateToHome() //takes us to home screen
             viewModel.clearLoginSuccess()  // resets isLoggedIn flag so we don’t loop
         }
