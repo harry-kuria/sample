@@ -5,7 +5,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose") //version "2.1.21" //don't add version gave error of different version at compilation
 
-    id("com.google.protobuf") version "0.9.1"
+    id("com.google.protobuf") version "0.9.4"
 }
 
 android {
@@ -44,6 +44,9 @@ android {
         compose = true
     }
     composeOptions {kotlinCompilerExtensionVersion = "1.6.1"}
+
+
+    //sourceSets {getByName("main") {proto.srcDir("src/main/proto")}}
 
 }
 
@@ -90,15 +93,18 @@ dependencies {
 
     //DataStore
     implementation("androidx.datastore:datastore:1.1.0") //main datastore
-    implementation("com.google.protobuf:protobuf-javalite:3.24.0") //for .proto files
-    }
+    implementation("androidx.datastore:datastore-core:1.0.0")
+    implementation("com.google.protobuf:protobuf-java:3.25.3")
+
+}
 
 protobuf {
-    protoc { artifact = "com.google.protobuf:protoc:3.24.0"}
+    protoc { artifact = "com.google.protobuf:protoc:3.25.3"}
     generateProtoTasks {
-        all().forEach {
-            it.builtins {
-                create("java") {option("lite")} }
+        all().forEach { task -> task.builtins {
+            maybeCreate("java")
+                //.apply { option("lite")}
+        }
         }
     }
 }

@@ -17,13 +17,13 @@ object Routes {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController = rememberNavController()){
+fun AppNavHost(navController: NavHostController = rememberNavController(), isLoggedIn: Boolean) {
     //val context = LocalContext.current
     //val userDao: UserDao = remember { AppDatabase.getDatabase(context).UserDao() }
 
     NavHost(
         navController  = navController,
-        startDestination = Routes.LOGIN
+        startDestination = if (!isLoggedIn) {Routes.LOGIN} else {Routes.HOME}
     ) {
         composable(Routes.LOGIN) {
             LoginScreen(

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gettingstartedwithjetpackcompose.data.local.User
 import com.example.gettingstartedwithjetpackcompose.data.repository.UserRepository
+import com.example.gettingstartedwithjetpackcompose.data.repository.UserDataStoreRepository
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.LoginUiState
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val userRepository: UserRepository): ViewModel() {
+class AuthViewModel @Inject constructor(private val userRepository: UserRepository,
+                                        private val userDataStoreRepository: UserDataStoreRepository): ViewModel() {
     private val _loginState = MutableStateFlow(LoginUiState())
     val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
 
@@ -39,6 +41,15 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
 
         _loginState.update { it.copy(isLoading = true) }
 
+        val emailExists = withContext(Dispatchers.IO) {
+            userRepository.getUserByEmail(lState.email) != null
+        }
+
+        if (! emailExists) {
+            _loginState.update { it.copy(isLoading = false, isLoggedIn = false, error = "Email not found. Register instead") }
+            return@launch
+        }
+
         val user = withContext(Dispatchers.IO) {
             userRepository.loginUser(lState.email, lState.password)
         }
@@ -50,6 +61,10 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
                 isLoading = false, isLoggedIn = success,
                 error = if (!success) "Incorrect email or password" else null
             )
+        }
+
+        if (success) {
+            userDataStoreRepository.saveUserAccountData(email = lState.email, username = user.username)
         }
     }
 
@@ -102,7 +117,7 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         }
 
         val newUser =
-            User(username = rState.username, email = rState.email, passwordHash = rState.password)
+            User(username = rState.username, email = rState.email, passwordHash = rState.password, isLoggedIn = true)
 
 
         val ok = withContext(Dispatchers.IO) {

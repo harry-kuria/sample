@@ -6,7 +6,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import com.google.protobuf.InvalidProtocolBufferException
 
-object UserAccountDataSerializer : Serializer<User> {
+object UserAccountDataSerializer : Serializer<UserAccountData> {
     override val defaultValue: UserAccountData = UserAccountData.getDefaultInstance()
     //used when there is no data saved yet in the proto file
     override suspend fun readFrom(input : InputStream) : UserAccountData {

@@ -4,15 +4,16 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
+import com.example.gettingstartedwithjetpackcompose.UserAccountData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 
 
-///////NOT USED NOW BECAUSE OF DATASTORE
+///////NOT USED NOW BECAUSE OF DATASTORE (I think)
 //object UserAccountDataStore {
 //    private lateinit var dataStore: DataStore<UserAccountData> //to be initialized later
 //    fun initializeDataStore(context: Context) {
