@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.register
+package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication
 
 sealed interface RegisterEvent {
     data class UsernameChanged(val value: String) : RegisterEvent

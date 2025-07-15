@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") //version "2.1.21" //don't add version gave error of different version at compilation
 
     id("com.google.protobuf") version "0.9.4"
+
 }
 
 android {
@@ -96,6 +97,12 @@ dependencies {
     implementation("androidx.datastore:datastore-core:1.0.0")
     implementation("com.google.protobuf:protobuf-java:3.25.3")
 
+    //splash screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }
 
 protobuf {

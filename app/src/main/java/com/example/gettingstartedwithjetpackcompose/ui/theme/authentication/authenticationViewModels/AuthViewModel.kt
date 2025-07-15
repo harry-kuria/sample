@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel
+package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
@@ -17,10 +17,23 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlinx.coroutines.flow.*
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val userRepository: UserRepository,
                                         private val userDataStoreRepository: UserDataStoreRepository): ViewModel() {
+
+
+    private val _isSessionReady = MutableStateFlow(false)
+    val isSessionReady: StateFlow<Boolean> = _isSessionReady.asStateFlow()
+
+    val isLoggedIn: StateFlow<Boolean> = userDataStoreRepository
+        .userData
+        .onEach { _isSessionReady.value = true }
+        .map { account -> account.isLoggedIn == true }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+
     private val _loginState = MutableStateFlow(LoginUiState())
     val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
 

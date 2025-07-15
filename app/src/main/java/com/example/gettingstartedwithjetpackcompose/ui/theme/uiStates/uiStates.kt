@@ -17,5 +17,16 @@ data class RegisterUiState(
     val username: String = "",
     val error: String? = null,
     val isRegistered: Boolean = false
+)
 
+data class HomeUiState(
+    val username: String = "",
+    val email: String = ""
+)
+
+data class MyAccountUiState(
+    val username: String = "",
+    val email: String = "",
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )

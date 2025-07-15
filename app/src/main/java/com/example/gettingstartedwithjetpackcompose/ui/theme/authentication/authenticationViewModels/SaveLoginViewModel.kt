@@ -1,4 +1,6 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel
+
+
+package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

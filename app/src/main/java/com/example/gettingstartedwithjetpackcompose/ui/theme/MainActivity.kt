@@ -4,26 +4,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels.AuthViewModel
 import com.example.gettingstartedwithjetpackcompose.ui.theme.nav.AppNavHost
-import com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel.SaveLoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 
+@ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val authVm: AuthViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen().setKeepOnScreenCondition { //keep splash screen on until auth is ready
+            !authVm.isSessionReady.value
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             GettingStartedWithJetpackComposeTheme {
-                val saveLoginVm: SaveLoginViewModel = hiltViewModel()
-                val loggedIn by saveLoginVm.isLoggedIn.collectAsState(initial = false)
-                AppNavHost(isLoggedIn = loggedIn)
-
-
+                val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
+                if (authVm.isSessionReady.collectAsState().value) {
+                    AppNavHost(isLoggedIn = loggedIn)
+                }
             }
         }
     }

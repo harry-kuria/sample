@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.register
+package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gettingstartedwithjetpackcompose.R
 import com.example.gettingstartedwithjetpackcompose.ui.theme.Roboto
-import com.example.gettingstartedwithjetpackcompose.ui.theme.viewModel.AuthViewModel
+import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels.AuthViewModel
 
 
 
