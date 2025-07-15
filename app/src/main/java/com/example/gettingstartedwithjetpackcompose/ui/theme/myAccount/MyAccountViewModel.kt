@@ -24,41 +24,13 @@ class MyAccountViewModel @Inject constructor(private val userDataStoreRepository
         private val _myAccountUiEvent = MutableSharedFlow<MyAccountUiEvent>()
         val myAccountUiEvent: SharedFlow<MyAccountUiEvent> = _myAccountUiEvent
 
-        fun onSettingsClick() {
-            viewModelScope.launch { _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToSettings) }
-        }
-
-        fun onNotificationsClick() {
-            viewModelScope.launch { _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToNotifications) }
-        }
-
-        fun onAboutClick() {
-            viewModelScope.launch { _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToAbout) }
-        }
-
-        fun onFaqClick() {
-            viewModelScope.launch { _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToFAQ) }
-        }
-
-        fun onBackClick() {
-            viewModelScope.launch { _myAccountUiEvent.emit(MyAccountUiEvent.Back) }
-        }
-
-        fun onLogoutClick() {
-            viewModelScope.launch {
-                userDataStoreRepository.clearUserAccountData()
-                _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToLogin)
-            }
-
-        }
-
         fun onEvent(event: MyAccountEvent) {
             viewModelScope.launch {
                 when (event) {
-                    MyAccountEvent.SettingsClicked      -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToSettings)
+                    MyAccountEvent.SettingsClicked -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToSettings)
                     MyAccountEvent.NotificationsClicked -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToNotifications)
-                    MyAccountEvent.FAQClicked           -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToFAQ)
-                    MyAccountEvent.AboutClicked         -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToAbout)
+                    MyAccountEvent.FAQClicked -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToFAQ)
+                    MyAccountEvent.AboutClicked -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToAbout)
 
                     MyAccountEvent.LogoutClicked -> {
                         userDataStoreRepository.clearUserAccountData()

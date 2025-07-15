@@ -39,7 +39,7 @@ fun HomeScreen(onNavigateToMyAccount: () -> Unit) {
                         fontSize = 30.sp, fontFamily = Roboto)
                 },
                 actions = {
-                    IconButton(onClick = { /* onNavigateToMyAccount */ }) {
+                    IconButton(onClick = { onNavigateToMyAccount() }) {
                         Icon(imageVector = Icons.Filled.AccountCircle,
                             contentDescription = "My Account",
                             modifier = Modifier.size(35.dp),

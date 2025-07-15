@@ -76,7 +76,7 @@ fun MyAccountScreen(username: String, email: String,
                     onBackClick : () -> Unit) {
     Column {
         Row(){
-            IconButton( onClick = {onBackClick}) {
+            IconButton( onClick = {onBackClick()}) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "Back button",
                     tint = MaterialTheme.colorScheme.primary
@@ -108,7 +108,7 @@ fun MyAccountScreen(username: String, email: String,
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        ProfileMenuButtons(icon = IconType.PainterRes(painterResource(id = R.drawable.ic_logout)), title = "Logout", onClick = {onLogoutClick})
+        ProfileMenuButtons(icon = IconType.PainterRes(painterResource(id = R.drawable.ic_logout)), title = "Logout", onClick = {onLogoutClick()})
 
     }
 }

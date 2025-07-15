@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
 import com.example.gettingstartedwithjetpackcompose.ui.theme.nav.Routes
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 
 
@@ -13,7 +14,7 @@ fun MyAccountRoute(navController: NavController,
                     viewModel: MyAccountViewModel = hiltViewModel()){
 
 
-    val uiState = viewModel.myAccountState.collectAsState().value
+    val uiState by viewModel.myAccountState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.myAccountUiEvent.collect { event ->

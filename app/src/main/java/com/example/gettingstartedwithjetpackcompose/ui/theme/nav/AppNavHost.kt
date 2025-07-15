@@ -27,7 +27,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), isLog
 
     NavHost(
         navController  = navController,
-        startDestination = if (isLoggedIn) {Routes.MY_ACCOUNT} else {Routes.LOGIN}
+        startDestination = if (isLoggedIn) {Routes.HOME} else {Routes.LOGIN}
     ) {
         composable(Routes.LOGIN) {
             LoginScreen(
