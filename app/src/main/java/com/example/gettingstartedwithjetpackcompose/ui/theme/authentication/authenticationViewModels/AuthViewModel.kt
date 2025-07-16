@@ -27,11 +27,22 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
     private val _isSessionReady = MutableStateFlow(false)
     val isSessionReady: StateFlow<Boolean> = _isSessionReady.asStateFlow()
 
-    val isLoggedIn: StateFlow<Boolean> = userDataStoreRepository
-        .userData
-        .onEach { _isSessionReady.value = true }
-        .map { account -> account.isLoggedIn == true }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    val isLoggedIn: StateFlow<Boolean> = userDataStoreRepository.userData
+        .onStart { _isSessionReady.value = false }
+        .map { account ->
+            _isSessionReady.value = true
+            account.isLoggedIn == true}
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+
+    val username = userDataStoreRepository.userData
+        .map { it.username }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
+//        val userEmail = userDataStoreRepository.userData
+//            .map { it.email }
+//            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
 
 
     private val _loginState = MutableStateFlow(LoginUiState())

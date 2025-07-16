@@ -23,12 +23,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gettingstartedwithjetpackcompose.R
 import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels.AuthViewModel
 import com.example.gettingstartedwithjetpackcompose.ui.theme.Roboto
-import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels.SaveLoginViewModel
 
 
 @Composable
 fun LoginScreen(onNavigateToHome: () -> Unit, viewModel: AuthViewModel = hiltViewModel(),
-                saveLoginViewModel: SaveLoginViewModel = hiltViewModel(),
                 onNavigateToRegister: () -> Unit
 ) {
     var showPassword by remember { mutableStateOf(false) }
@@ -37,7 +35,7 @@ fun LoginScreen(onNavigateToHome: () -> Unit, viewModel: AuthViewModel = hiltVie
 
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
-            saveLoginViewModel.login(state.email, state.username)
+            viewModel.login()
             onNavigateToHome() //takes us to home screen
             viewModel.clearLoginSuccess()  // resets isLoggedIn flag so we don’t loop
         }
