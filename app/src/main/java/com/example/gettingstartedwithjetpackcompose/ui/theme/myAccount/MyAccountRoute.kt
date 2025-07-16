@@ -35,10 +35,10 @@ fun MyAccountRoute(navController: NavController,
     MyAccountScreen(
         username = uiState.username,
         email = uiState.email,
-        onSettingsClick = { viewModel.onEvent(MyAccountEvent.SettingsClicked) },
-        onNotificationsClick = { viewModel.onEvent(MyAccountEvent.NotificationsClicked) },
-        onFAQClick = { viewModel.onEvent(MyAccountEvent.FAQClicked) },
-        onAboutClick = { viewModel.onEvent(MyAccountEvent.AboutClicked) },
+//        onSettingsClick = { viewModel.onEvent(MyAccountEvent.SettingsClicked) },
+//        onNotificationsClick = { viewModel.onEvent(MyAccountEvent.NotificationsClicked) },
+//        onFAQClick = { viewModel.onEvent(MyAccountEvent.FAQClicked) },
+//        onAboutClick = { viewModel.onEvent(MyAccountEvent.AboutClicked) },
         onLogoutClick = { viewModel.onEvent(MyAccountEvent.LogoutClicked) },
         onBackClick = { viewModel.onEvent(MyAccountEvent.BackClicked) }
     )

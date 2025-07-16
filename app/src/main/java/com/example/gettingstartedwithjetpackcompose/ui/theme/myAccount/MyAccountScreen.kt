@@ -1,16 +1,21 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
@@ -27,22 +32,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.gettingstartedwithjetpackcompose.ui.theme.Roboto
 
 sealed class IconType {
     data class Vector(val imageVector: ImageVector) : IconType()
     data class PainterRes(val painter: Painter) : IconType()
 }
 
-
 @Composable
-fun ProfileMenuButtons(icon: IconType, title: String, onClick: () -> Unit,
-                       iconTint: Color = Color.Black, textColor: Color = Color.Black) {
+fun ProfileMenuButtons(icon: IconType,
+                       title: String,
+                       onClick: () -> Unit,
+                       iconTint: Color = Color.Black,
+                       titleColor: Color = Color.Black) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable(onClick = onClick)
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+        .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically){
         when (icon) {
             is IconType.Vector -> Icon(
@@ -59,56 +67,118 @@ fun ProfileMenuButtons(icon: IconType, title: String, onClick: () -> Unit,
             )
         }
         Spacer(modifier = Modifier.size(20.dp))
-        Text(text = title, style = MaterialTheme.typography.headlineSmall,
-            color = textColor
+        Text(text = title, style = MaterialTheme.typography.bodyMedium, fontFamily = Roboto,
+            color = titleColor
         )
     }
 
 }
 
+
 @Composable
-fun MyAccountScreen(username: String, email: String,
-                    onSettingsClick: () -> Unit,
-                    onNotificationsClick : () -> Unit,
-                    onFAQClick : () -> Unit,
-                    onAboutClick : () -> Unit,
-                    onLogoutClick : () -> Unit,
-                    onBackClick : () -> Unit) {
-    Column {
-        Row(){
-            IconButton( onClick = {onBackClick()}) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "Back button",
-                    tint = MaterialTheme.colorScheme.primary
+fun MyAccountScreen(
+    username: String,
+    email: String,
+    onLogoutClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(24.dp)
+    ) {
+        // Top Bar
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBackClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = "Back"
                 )
             }
-            Text(text = "My Account", style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.primary
+
+            Text(
+                text = "My Account",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                //textAlign = TextAlign.Center,
+                fontFamily = Roboto
             )
+
+            Spacer(modifier = Modifier.size(48.dp)) // Fills space to match back button width
         }
-        Row(){
-            Image(painter = painterResource(R.drawable.user_icon),
-                contentDescription = "Profile picture",
-                modifier = Modifier.size(100.dp) . clip(shape = CircleShape),
-            )
-            Spacer(modifier = Modifier.size(20.dp))
-            Column {
-                Text(text = username, style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+        ) {
+
+
+            // User information
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(R.drawable.user_icon),
+                    contentDescription = "User Avatar",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
                 )
-                Text(text = email, style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    Text(
+                        text = username,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = email,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+
+            // Profile button list
+            val menuItems = listOf(
+                Triple("Edit Profile", IconType.Vector(Icons.Filled.Edit), {}),
+                Triple("Settings", IconType.Vector(Icons.Filled.Settings), {}),
+                Triple("Notifications", IconType.Vector(Icons.Filled.Notifications), {}),
+                Triple("About", IconType.Vector(Icons.Filled.Info), {}),
+                //Triple("FAQ", IconType.PainterRes(painterResource(R.drawable.ic_faq)), {})
+            )
+
+            menuItems.forEachIndexed { index, item ->
+                ProfileMenuButtons(
+                    icon = item.second,
+                    title = item.first,
+                    onClick = item.third
                 )
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            //Logout button only
+            ProfileMenuButtons(
+                icon = IconType.PainterRes(painterResource(R.drawable.ic_logout)),
+                title = "Logout",
+                titleColor = Color(0xFFE53935),
+                iconTint = Color(0xFFE53935),
+                onClick = onLogoutClick
+            )
+
         }
-        ProfileMenuButtons(icon = IconType.Vector(Icons.Filled.Settings), title = "Settings", onClick = {/*takeUserToSettingsScreen*/})
-        ProfileMenuButtons(icon = IconType.Vector(Icons.Filled.Notifications), title = "Notifications", onClick = {/*takeUserToNotificationsScreen*/})
-        ProfileMenuButtons(icon = IconType.Vector(Icons.Filled.Info) , title = "About", onClick = {/*takeUserToAboutScreen*/})
-        ProfileMenuButtons(icon = IconType.PainterRes(painterResource(id = R.drawable.ic_faq)), title = "FAQ", onClick = {/*takeUserToFAQScreen*/} )
-
-        Spacer(modifier = Modifier.size(20.dp))
-
-        ProfileMenuButtons(icon = IconType.PainterRes(painterResource(id = R.drawable.ic_logout)), title = "Logout", onClick = {onLogoutClick()})
-
     }
 }
+

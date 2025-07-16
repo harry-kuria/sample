@@ -143,6 +143,11 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
             )
         }
 
+        if (ok) {
+            userDataStoreRepository.saveUserAccountData(email = rState.email, username = rState.username)
+            _isSessionReady.value = true
+        }
+
     }
     fun clearRegisterSuccess() = _registerState.update { it.copy(isRegistered = false) }
 }
