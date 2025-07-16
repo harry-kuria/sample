@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.gettingstartedwithjetpackcompose.SplashScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.home.HomeScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens.LoginScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens.RegisterScreen
@@ -13,6 +14,7 @@ import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccount
 
 
 object Routes {
+    const val SPLASH = "splash"
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val HOME = "home screen"
@@ -27,8 +29,13 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), isLog
 
     NavHost(
         navController  = navController,
-        startDestination = if (isLoggedIn) {Routes.HOME} else {Routes.LOGIN}
+        startDestination = Routes.SPLASH //if (isLoggedIn) {Routes.HOME} else {Routes.LOGIN}
     ) {
+
+        composable(Routes.SPLASH) {
+            SplashScreen(navController)
+        }
+
         composable(Routes.LOGIN) {
             LoginScreen(
                 //userDao = userDao,

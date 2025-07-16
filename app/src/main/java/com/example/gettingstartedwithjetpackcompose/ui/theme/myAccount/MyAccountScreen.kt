@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import com.example.gettingstartedwithjetpackcompose.R
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -152,7 +153,8 @@ fun MyAccountScreen(
                     Text(
                         text = email,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        color = Color.Gray,
+                        maxLines = 1
                     )
                 }
             }
@@ -189,31 +191,34 @@ fun MyAccountScreen(
             )
 
             if (showLogoutDialog) {
-                AlertDialog(
-                    onDismissRequest = { showLogoutDialog = false },
-                    title = { Text("LOGOUT") },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Warning,
-                            contentDescription = "Warning",
-                            tint = Color.Yellow
-                        )
-                    },
-                    text = { Text("Are you sure you want to logout?") },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            showLogoutDialog = false
-                            onLogoutClick()
-                        }) {
-                            Text("Logout", color = Color.Red)
+                Surface(modifier = Modifier.background(Color.LightGray)) {
+                    AlertDialog(
+                        onDismissRequest = { showLogoutDialog = false },
+                        title = { Text("LOGOUT") },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Filled.Warning,
+                                contentDescription = "Warning",
+                                tint = Color.Yellow
+                            )
+                        },
+                        text = { Text("Are you sure you want to logout?") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                showLogoutDialog = false
+                                onLogoutClick()
+                            }) {
+                                Text("Logout", color = Color.Red)
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showLogoutDialog = false }) {
+                                Text("Cancel")
+                            }
                         }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showLogoutDialog = false }) {
-                            Text("Cancel")
-                        }
-                    }
-                )
+                    )
+                }
+
             }
         }
     }

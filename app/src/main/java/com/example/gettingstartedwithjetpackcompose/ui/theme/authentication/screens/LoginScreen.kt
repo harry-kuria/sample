@@ -1,6 +1,5 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens
 
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
