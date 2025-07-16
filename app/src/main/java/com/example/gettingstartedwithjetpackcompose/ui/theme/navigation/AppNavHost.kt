@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.nav
+package com.example.gettingstartedwithjetpackcompose.ui.theme.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable

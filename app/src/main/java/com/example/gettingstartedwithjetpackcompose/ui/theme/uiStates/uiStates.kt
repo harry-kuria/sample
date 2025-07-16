@@ -19,10 +19,10 @@ data class RegisterUiState(
     val isRegistered: Boolean = false
 )
 
-data class HomeUiState(
-    val username: String = "",
-    val email: String = ""
-)
+//data class HomeUiState(
+//    val username: String = "",
+//    val email: String = ""
+//)
 
 data class MyAccountUiState(
     val username: String = "",

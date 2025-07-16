@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gettingstartedwithjetpackcompose.R
 import com.example.gettingstartedwithjetpackcompose.ui.theme.Roboto
-import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels.AuthViewModel
+import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.AuthViewModel
 
 
 

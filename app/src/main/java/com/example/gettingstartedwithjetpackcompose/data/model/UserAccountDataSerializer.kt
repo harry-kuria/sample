@@ -1,10 +1,11 @@
-package com.example.gettingstartedwithjetpackcompose
+package com.example.gettingstartedwithjetpackcompose.data.model
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
+import com.example.gettingstartedwithjetpackcompose.UserAccountData
+import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
-import com.google.protobuf.InvalidProtocolBufferException
 
 object UserAccountDataSerializer : Serializer<UserAccountData> {
     override val defaultValue: UserAccountData = UserAccountData.getDefaultInstance()

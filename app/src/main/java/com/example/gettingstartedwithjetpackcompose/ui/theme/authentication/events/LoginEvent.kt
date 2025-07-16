@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication
+package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.events
 
 sealed interface LoginEvent {
     data class EmailChanged(val value: String) : LoginEvent

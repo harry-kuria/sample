@@ -161,7 +161,7 @@ fun MyAccountScreen(
 
 
             // Profile button list
-            val menuItems = listOf(
+            val profileButtonItems = listOf(
                 Triple("Edit Profile", IconType.Vector(Icons.Filled.Edit), {}),
                 Triple("Settings", IconType.Vector(Icons.Filled.Settings), {}),
                 Triple("Notifications", IconType.Vector(Icons.Filled.Notifications), {}),
@@ -169,7 +169,7 @@ fun MyAccountScreen(
                 //Triple("FAQ", IconType.PainterRes(painterResource(R.drawable.ic_faq)), {})
             )
 
-            menuItems.forEachIndexed { index, item ->
+            profileButtonItems.forEachIndexed { index, item ->
                 ProfileMenuButtons(
                     icon = item.second,
                     title = item.first,

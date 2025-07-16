@@ -2,7 +2,7 @@ package com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gettingstartedwithjetpackcompose.data.repository.UserDataStoreRepository
+import com.example.gettingstartedwithjetpackcompose.data.repository.UserAuthRepository
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.MyAccountUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,9 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MyAccountViewModel @Inject constructor(private val userDataStoreRepository: UserDataStoreRepository)
+class MyAccountViewModel @Inject constructor(private val userAuthRepository: UserAuthRepository)
     : ViewModel() {
-        val myAccountState: StateFlow<MyAccountUiState> = userDataStoreRepository.userData.map{ sessionData ->
+        val myAccountState: StateFlow<MyAccountUiState> = userAuthRepository.userData.map{ sessionData ->
             MyAccountUiState(username = sessionData.username, email = sessionData.email) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MyAccountUiState())
 
@@ -33,7 +33,7 @@ class MyAccountViewModel @Inject constructor(private val userDataStoreRepository
                     MyAccountEvent.AboutClicked -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToAbout)
 
                     MyAccountEvent.LogoutClicked -> {
-                        userDataStoreRepository.clearUserAccountData()
+                        userAuthRepository.clearUserAccountData()
                         _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToLogin)
                     }
 

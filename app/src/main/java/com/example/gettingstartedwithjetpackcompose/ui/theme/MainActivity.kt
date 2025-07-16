@@ -8,8 +8,8 @@ import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels.AuthViewModel
-import com.example.gettingstartedwithjetpackcompose.ui.theme.nav.AppNavHost
+import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.AuthViewModel
+import com.example.gettingstartedwithjetpackcompose.ui.theme.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 

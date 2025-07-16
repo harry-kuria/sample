@@ -1,45 +1,46 @@
-package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.authenticationViewModels
+package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gettingstartedwithjetpackcompose.data.local.User
-import com.example.gettingstartedwithjetpackcompose.data.repository.UserRepository
-import com.example.gettingstartedwithjetpackcompose.data.repository.UserDataStoreRepository
+import com.example.gettingstartedwithjetpackcompose.data.repository.UserAuthRepository
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.LoginUiState
 import com.example.gettingstartedwithjetpackcompose.ui.theme.uiStates.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlinx.coroutines.flow.*
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val userRepository: UserRepository,
-                                        private val userDataStoreRepository: UserDataStoreRepository): ViewModel() {
+class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuthRepository): ViewModel() {
 
 
     private val _isSessionReady = MutableStateFlow(false)
     val isSessionReady: StateFlow<Boolean> = _isSessionReady.asStateFlow()
 
-    val isLoggedIn: StateFlow<Boolean> = userDataStoreRepository.userData
+    val isLoggedIn: StateFlow<Boolean> = userAuthRepository.userData
         .onStart { _isSessionReady.value = false }
         .map { account ->
             _isSessionReady.value = true
             account.isLoggedIn == true}
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), false)
 
 
-    val username = userDataStoreRepository.userData
+    val username = userAuthRepository.userData
         .map { it.username }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), "")
 
-//        val userEmail = userDataStoreRepository.userData
+//        val userEmail = userAuthRepository.userData
 //            .map { it.email }
 //            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
@@ -66,7 +67,7 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         _loginState.update { it.copy(isLoading = true) }
 
         val emailExists = withContext(Dispatchers.IO) {
-            userRepository.getUserByEmail(lState.email) != null
+            userAuthRepository.getUserByEmail(lState.email) != null
         }
 
         if (! emailExists) {
@@ -75,7 +76,7 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         }
 
         val user = withContext(Dispatchers.IO) {
-            userRepository.loginUser(lState.email, lState.password)
+            userAuthRepository.loginUser(lState.email, lState.password)
         }
 
         val success = user != null
@@ -88,7 +89,7 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         }
 
         if (success) {
-            userDataStoreRepository.saveUserAccountData(email = lState.email, username = user.username)
+            userAuthRepository.saveUserAccountData(email = lState.email, username = user.username)
         }
     }
 
@@ -110,7 +111,7 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         //_registerState.update { it.copy(isLoading = true) }
 
         val emailExists = withContext(Dispatchers.IO) {
-            userRepository.getUserByEmail(rState.email) != null
+            userAuthRepository.getUserByEmail(rState.email) != null
         }
 //        Flow<User?>
 
@@ -141,11 +142,16 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         }
 
         val newUser =
-            User(username = rState.username, email = rState.email, passwordHash = rState.password, isLoggedIn = true)
+            User(
+                username = rState.username,
+                email = rState.email,
+                passwordHash = rState.password,
+                isLoggedIn = true
+            )
 
 
         val ok = withContext(Dispatchers.IO) {
-            runCatching { userRepository.registerUser(newUser) }.isSuccess
+            runCatching { userAuthRepository.registerUser(newUser) }.isSuccess
         }
         _registerState.update {
             it.copy(
@@ -155,7 +161,7 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
         }
 
         if (ok) {
-            userDataStoreRepository.saveUserAccountData(email = rState.email, username = rState.username)
+            userAuthRepository.saveUserAccountData(email = rState.email, username = rState.username)
             _isSessionReady.value = true
         }
 
