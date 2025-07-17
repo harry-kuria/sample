@@ -28,17 +28,26 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
     private val _isSessionReady = MutableStateFlow(false)
     val isSessionReady: StateFlow<Boolean> = _isSessionReady.asStateFlow()
 
-    val isLoggedIn: StateFlow<Boolean> = userAuthRepository.userData
-        .onStart { _isSessionReady.value = false }
-        .map { account ->
-            _isSessionReady.value = true
-            account.isLoggedIn == true}
-        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), false)
-
+    private val _isLoggedIn =  MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
     val username = userAuthRepository.userData
         .map { it.username }
         .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), "")
+
+
+    init{
+        //init is like a constructor. it is called automatically when the class is created
+        //used here because we need the sessionReady to be flipped to true immediately the user is logged in so that home screen can pop up
+        viewModelScope.launch {
+            userAuthRepository.userData
+                .onStart { _isSessionReady.value = false }
+                .collect { account ->
+                    _isSessionReady.value = true
+                    _isLoggedIn.value = account.isLoggedIn == true
+                }
+        }
+    }
 
 //        val userEmail = userAuthRepository.userData
 //            .map { it.email }

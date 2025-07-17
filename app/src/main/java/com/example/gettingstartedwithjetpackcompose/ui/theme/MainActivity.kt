@@ -20,18 +20,22 @@ class MainActivity : ComponentActivity() {
     private val authVm: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setKeepOnScreenCondition { //keep splash screen on until auth is ready
-            !authVm.isSessionReady.value
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                !authVm.isSessionReady.value
+            }
         }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val sessionReady by authVm.isSessionReady.collectAsState()
             GettingStartedWithJetpackComposeTheme {
                 val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
-                if (authVm.isSessionReady.collectAsState().value) {
+                if (sessionReady) {
                     AppNavHost(isLoggedIn = loggedIn)
                 }
             }
+
         }
     }
 }
