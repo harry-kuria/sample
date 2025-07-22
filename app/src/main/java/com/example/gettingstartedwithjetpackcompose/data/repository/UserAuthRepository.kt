@@ -36,15 +36,15 @@ class UserAuthRepository @Inject constructor(private val userDao: UserDao,
 //        userDao.deleteAll()
 //    }
 
-
 //    suspend fun setLoggedIn(isLoggedIn: Boolean) {
 //        dataStore.updateData { it.toBuilder()
 //            .setIsLoggedIn(isLoggedIn)
 //            .build() }
 //    }
 
-    //functions for datastore
 
+
+//DATASTORE FUNCTIONS
     suspend fun saveUserAccountData(email: String, username: String){
         dataStore.updateData { currentData ->
             currentData.toBuilder()

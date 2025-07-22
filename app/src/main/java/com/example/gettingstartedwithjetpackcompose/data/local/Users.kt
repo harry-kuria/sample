@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 ////Use kapt for now
 @Entity(tableName = "Users", indices = [Index(value = ["email"], unique = true)])
-//indices = ... ensures that al the email address values are the same and throws an error if not
+//indices = ... ensures that all the email address values are not the same and throws an error if not
 data class User(
     //@ColumnInfo(name = "password") val passwordHash: String, //keeps the name of password field as password but variable name as passHash
     @PrimaryKey val email: String, //sets this as the primary key

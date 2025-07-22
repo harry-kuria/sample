@@ -26,15 +26,15 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController, authVm: AuthViewModel = hiltViewModel()) {
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_animation))
-    val progress by animateLottieCompositionAsState(composition, iterations = 12, speed = 1f)
+    val progress by animateLottieCompositionAsState(composition, speed = 1f)
 
 
     val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
     val sessionReady by authVm.isSessionReady.collectAsState()
 
     LaunchedEffect(progress, sessionReady) {
-        if (progress == 1f && sessionReady) {
-            //delay(5000)
+        delay(500)
+        if (sessionReady) {
             if (loggedIn) {
                 navController.navigate(Routes.HOME) {
                     popUpTo(Routes.SPLASH) { inclusive = true }

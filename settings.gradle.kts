@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Getting Started with Jetpack Compose"
 include(":app")
- 
+//include(":authentication")
