@@ -37,6 +37,7 @@ fun AppNavHost(
         navController = navController,
         startDestination = Routes.SPLASH
     ) {
+
         composable(Routes.SPLASH) {
             SplashScreen(navController)
         }
@@ -58,9 +59,7 @@ fun AppNavHost(
         composable(Routes.HOME) {
             NotesHomeScreen(
                 onNavigateToMyAccount = { navController.navigate(Routes.MY_ACCOUNT) },
-                onNavigateToEditNote = { noteId ->
-                    navController.navigate("${Routes.EDIT_NOTE}/$noteId")
-                }
+                onNavigateToEditNote = { noteId -> navController.navigate("${Routes.EDIT_NOTE}/$noteId") }
             )
         }
 

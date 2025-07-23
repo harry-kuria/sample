@@ -156,6 +156,4 @@ class NotesHomeViewModel @Inject constructor(
         _noteTitle.value = ""
         _noteContent.value = ""
     }
-
-
 }
