@@ -16,20 +16,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @OptIn(FlowPreview::class)
 @Composable
 fun EditNoteScreen(noteId: Long,
-                   viewModel: NotesHomeViewModel = hiltViewModel(), onNavigateBack: () -> Unit) {
+                   viewModel: NotesHomeViewModel = hiltViewModel(), onNavigateBack: () -> Unit,
+) {
 
     val title by viewModel.noteTitle.collectAsState()
     val content by viewModel.noteContent.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
+
 
     LaunchedEffect(noteId) {
         viewModel.loadNote(noteId)
@@ -40,8 +46,11 @@ fun EditNoteScreen(noteId: Long,
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        IconButton(onClick = onNavigateBack) {
-            (Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back"))
+        IconButton(onClick = { coroutineScope.launch {
+            viewModel.clearLastOpenedNoteId()
+            onNavigateBack() }
+        }) {
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

@@ -19,25 +19,39 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.gettingstartedwithjetpackcompose.ui.theme.notes.NotesHomeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 
 
+@ExperimentalCoroutinesApi
+@OptIn(FlowPreview::class)
 @Composable
-fun SplashScreen(navController: NavController, authVm: AuthViewModel = hiltViewModel()) {
+fun SplashScreen(navController: NavController, authVm: AuthViewModel = hiltViewModel(),
+                 notesVm: NotesHomeViewModel = hiltViewModel()) {
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_animation))
     val progress by animateLottieCompositionAsState(composition, speed = 1f)
 
-
     val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
     val sessionReady by authVm.isSessionReady.collectAsState()
 
-    LaunchedEffect(progress, sessionReady) {
+    val notesSession by notesVm.userAccountData.collectAsState()
+
+    LaunchedEffect(progress, sessionReady, loggedIn, notesSession) {
         delay(500)
         if (sessionReady) {
             if (loggedIn) {
-                navController.navigate(Routes.HOME) {
-                    popUpTo(Routes.SPLASH) { inclusive = true }
+                val lastOpenedNoteId = notesSession.lastOpenedNoteId
+                if (lastOpenedNoteId > 0L) {
+                    navController.navigate("${Routes.EDIT_NOTE}/$lastOpenedNoteId") {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
+                } else{
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
                 }
             } else {
                 navController.navigate(Routes.LOGIN) {
@@ -53,8 +67,5 @@ fun SplashScreen(navController: NavController, authVm: AuthViewModel = hiltViewM
             progress = { progress }
         )
     }
-
-    Log.d("Compose", "Session ready in Compose: $sessionReady")
-
 
 }

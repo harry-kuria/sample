@@ -2,6 +2,7 @@ package com.example.gettingstartedwithjetpackcompose.ui.theme.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gettingstartedwithjetpackcompose.UserAccountData
 import com.example.gettingstartedwithjetpackcompose.data.local.Note
 import com.example.gettingstartedwithjetpackcompose.data.repository.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +26,17 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class NotesHomeViewModel @Inject constructor(
-    private val notesRepository: NotesRepository
+    private val notesRepository: NotesRepository,
 ): ViewModel() {
+
+    val userAccountData: StateFlow<UserAccountData> =
+        notesRepository.userData
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = UserAccountData.getDefaultInstance()
+            )
+
 
     private val _note = MutableStateFlow<Note?>(null)
     val note: StateFlow<Note?> = _note
@@ -76,6 +86,7 @@ class NotesHomeViewModel @Inject constructor(
 
     fun loadNote(id: Long) {
         viewModelScope.launch {
+            notesRepository.setLastOpenedNoteId(id)
             val foundNote = notesRepository.getNote(id)
             _note.value = foundNote
             _noteTitle.value = foundNote?.title ?: ""
@@ -127,5 +138,24 @@ class NotesHomeViewModel @Inject constructor(
     fun clearSearchResult() {
         _searchQuery.value = ""
     }
+
+    fun updateLastOpenedNoteId(id: Long) {
+        viewModelScope.launch {
+            notesRepository.setLastOpenedNoteId(id)
+        }
+    }
+
+    fun clearLastOpenedNoteId() {
+        viewModelScope.launch {
+            notesRepository.clearLastOpenedNoteId()
+        }
+    }
+
+    fun clearCurrentNote(){
+        _note.value = null
+        _noteTitle.value = ""
+        _noteContent.value = ""
+    }
+
 
 }

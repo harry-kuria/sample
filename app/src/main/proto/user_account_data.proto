@@ -13,6 +13,8 @@ message UserAccountData {
   string email = 1;
   string username = 2;
   bool is_logged_in = 3;
+  int64 last_opened_note_id = 4;
+
 }
 //.proto files keep the structure and not the actual data. they are like class definitions
 

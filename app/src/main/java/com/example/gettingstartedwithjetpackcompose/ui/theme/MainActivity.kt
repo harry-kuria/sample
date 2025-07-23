@@ -1,5 +1,6 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme
 
+import androidx.navigation.compose.rememberNavController
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,8 +13,9 @@ import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.Auth
 import com.example.gettingstartedwithjetpackcompose.ui.theme.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-
+@ExperimentalCoroutinesApi
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -25,21 +27,27 @@ class MainActivity : ComponentActivity() {
                 !authVm.isSessionReady.value
             }
         }
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val sessionReady by authVm.isSessionReady.collectAsState()
+            val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
+            val navController = rememberNavController()
+
             GettingStartedWithJetpackComposeTheme {
-                val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
                 if (sessionReady) {
-                    AppNavHost(isLoggedIn = loggedIn)
+                    AppNavHost(
+                        navController = navController,
+                        isLoggedIn = loggedIn,
+                    )
+
+
                 }
             }
-
         }
     }
 }
-
 
 
 //@Preview(showBackground = true)
@@ -49,4 +57,3 @@ class MainActivity : ComponentActivity() {
 //        Greeting("Android")
 //    }
 //}
-

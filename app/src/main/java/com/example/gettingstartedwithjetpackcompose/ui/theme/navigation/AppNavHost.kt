@@ -25,32 +25,31 @@ object Routes {
     const val EDIT_NOTE = "edit_note_screen"
 }
 
+
 @ExperimentalMaterial3Api
 @ExperimentalCoroutinesApi
 @Composable
-fun AppNavHost(navController: NavHostController = rememberNavController(), isLoggedIn: Boolean) {
-    //val context = LocalContext.current
-    //val userDao: UserDao = remember { AppDatabase.getDatabase(context).UserDao() }
-
+fun AppNavHost(
+    navController: NavHostController = rememberNavController(),
+    isLoggedIn: Boolean,
+) {
     NavHost(
-        navController  = navController,
-        startDestination = Routes.SPLASH //if (isLoggedIn) {Routes.HOME} else {Routes.LOGIN}
+        navController = navController,
+        startDestination = Routes.SPLASH
     ) {
-
         composable(Routes.SPLASH) {
             SplashScreen(navController)
         }
 
         composable(Routes.LOGIN) {
             LoginScreen(
-                //userDao = userDao,
-                onNavigateToHome = {navController.navigate(Routes.HOME)},
+                onNavigateToHome = { navController.navigate(Routes.HOME) },
                 onNavigateToRegister = { navController.navigate(Routes.REGISTER) }
             )
         }
+
         composable(Routes.REGISTER) {
             RegisterScreen(
-                //userDao = userDao,
                 onNavigateToLogin = { navController.navigate(Routes.LOGIN) },
                 onNavigateToHome = { navController.navigate(Routes.HOME) }
             )
@@ -59,8 +58,9 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), isLog
         composable(Routes.HOME) {
             NotesHomeScreen(
                 onNavigateToMyAccount = { navController.navigate(Routes.MY_ACCOUNT) },
-                onNavigateToEditNote = { noteId -> navController.navigate("${Routes.EDIT_NOTE}/$noteId") }
-                //allows user to navigate to a specific note based on id
+                onNavigateToEditNote = { noteId ->
+                    navController.navigate("${Routes.EDIT_NOTE}/$noteId")
+                }
             )
         }
 
@@ -73,7 +73,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), isLog
             if (noteId != null) {
                 EditNoteScreen(
                     noteId = noteId,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.navigate(Routes.HOME) },
                 )
             } else {
                 Text("Invalid note ID")
