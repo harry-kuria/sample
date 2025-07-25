@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -37,23 +36,25 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gettingstartedwithjetpackcompose.data.local.Note
+import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.AuthViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Composable
@@ -131,6 +132,7 @@ fun SearchBar( query: String, onQueryChange: (String) -> Unit, onSearch: () -> U
 @ExperimentalCoroutinesApi
 @Composable
 fun NotesHomeScreen(viewModel: NotesHomeViewModel = hiltViewModel(),
+                    authViewModel: AuthViewModel = hiltViewModel(),
                     onNavigateToEditNote: (Long) -> Unit,
                     onNavigateToMyAccount: () -> Unit){
 
@@ -139,6 +141,24 @@ fun NotesHomeScreen(viewModel: NotesHomeViewModel = hiltViewModel(),
     val query by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
     val focusManager = LocalFocusManager.current
+
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    val isSessionValid by authViewModel.isSessionValid.collectAsState()
+
+    LaunchedEffect(Unit) {
+        authViewModel.checkSessionValid()
+    }
+
+    val note by viewModel.note.collectAsState()
+
+    LaunchedEffect(note) {
+        // Only start auto-save after the note is loaded
+        if (note != null) {
+            viewModel.startAutoSave()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -169,6 +189,7 @@ fun NotesHomeScreen(viewModel: NotesHomeViewModel = hiltViewModel(),
                 Icon(Icons.Default.Add, contentDescription = "Add Note")
             }
         }
+        //snackBar = {}
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()
             .padding(innerPadding)
@@ -240,13 +261,10 @@ fun NotesHomeScreen(viewModel: NotesHomeViewModel = hiltViewModel(),
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 8.dp, vertical = 4.dp)
-
                                     )
                                 }
                             )
-
                         }
-
                     }
                 }
             }

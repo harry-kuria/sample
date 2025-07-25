@@ -10,10 +10,11 @@ option java_package = "com.example.gettingstartedwithjetpackcompose";
 option java_multiple_files = true; // makes accessing the proto files easier
 
 message UserAccountData {
-  string email = 1;
-  string username = 2;
-  bool is_logged_in = 3;
-  int64 last_opened_note_id = 4;
+  int64 id = 1;
+  string email = 2;
+  string username = 3;
+  bool is_logged_in = 4;
+  int64 last_opened_note_id = 5;
 
 }
 //.proto files keep the structure and not the actual data. they are like class definitions

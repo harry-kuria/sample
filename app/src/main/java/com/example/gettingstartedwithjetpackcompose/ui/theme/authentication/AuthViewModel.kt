@@ -1,5 +1,6 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme.authentication
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,6 +35,14 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
     val username = userAuthRepository.userData
         .map { it.username }
         .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), "")
+
+    private val _isSessionValid = MutableStateFlow<Boolean?>(null)
+    val isSessionValid: StateFlow<Boolean?> = _isSessionValid
+
+    fun checkSessionValid() = viewModelScope.launch {
+        val isValid = userAuthRepository.isSessionValid()
+        _isSessionValid.value = isValid
+    }
 
 
     init{
@@ -97,9 +106,34 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
             )
         }
 
-        if (success) {
-            userAuthRepository.saveUserAccountData(email = lState.email, username = user.username)
+//        if (success) {
+//            userAuthRepository.saveUserAccountData(id = user.id , email = lState.email, username = user.username)
+//        }
+
+//        if (success && user != null) {
+//            userAuthRepository.saveUserAccountData(
+//                id = user.id,
+//                email = user.email,
+//                username = user.username
+//            )
+//            Log.d("AuthViewModel", "Saved login user with id: ${user.id}")
+//        }
+
+
+        if (success && user != null) {
+            val fullUser = userAuthRepository.getUserByEmail(user.email)
+            if (fullUser != null) {
+                userAuthRepository.saveUserAccountData(
+                    id = fullUser.id,
+                    email = fullUser.email,
+                    username = fullUser.username
+                )
+                Log.d("AuthViewModel", "Saved login user with real ID: ${fullUser.id}")
+            } else {
+                Log.e("AuthViewModel", "User found by credentials but not by email. Unexpected.")
+            }
         }
+
     }
 
     fun clearLoginSuccess() = _loginState.update { it.copy(isLoggedIn = false) }
@@ -158,10 +192,18 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
                 isLoggedIn = true
             )
 
-
-        val ok = withContext(Dispatchers.IO) {
-            runCatching { userAuthRepository.registerUser(newUser) }.isSuccess
+        val newUserId = withContext(Dispatchers.IO) {
+            //runCatching {
+                userAuthRepository.registerUser(newUser)
+            //}.getOrNull()
         }
+
+        val ok = newUserId!! > 0 //!= null
+
+//        val ok = withContext(Dispatchers.IO) {
+//            runCatching { userAuthRepository.registerUser(newUser) }.isSuccess
+//        }
+
         _registerState.update {
             it.copy(
                 isLoading = false, isRegistered = ok,
@@ -169,10 +211,20 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
             )
         }
 
-        if (ok) {
-            userAuthRepository.saveUserAccountData(email = rState.email, username = rState.username)
+//        if (ok) {
+//            userAuthRepository.saveUserAccountData(id = newUser.id, email = rState.email, username = rState.username)
+//            _isSessionReady.value = true
+//        }
+        if (ok && newUserId != null) {
+            userAuthRepository.saveUserAccountData(
+                id = newUserId,
+                email = rState.email,
+                username = rState.username
+            )
             _isSessionReady.value = true
+            Log.d("AuthViewModel", "User registered with ID: $newUserId")
         }
+
 
     }
     fun clearRegisterSuccess() = _registerState.update { it.copy(isRegistered = false) }

@@ -44,8 +44,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-
     //sourceSets {getByName("main") {proto.srcDir("src/main/proto")}}
 
 }

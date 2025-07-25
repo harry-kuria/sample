@@ -3,25 +3,24 @@ package com.example.gettingstartedwithjetpackcompose.data.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface NotesDao{
-    @Query("SELECT * FROM notes ORDER BY timestamp DESC")
-    fun getAllNotes(): Flow<List<Note>>
+interface NotesDao {
 
-    @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' ORDER BY timestamp DESC")
-    fun searchNotes(query: String): Flow<List<Note>>
+    @Query("SELECT * FROM notes WHERE userId = :userId ORDER BY timestamp DESC")
+    fun getUserNotes(userId: Long): Flow<List<Note>>
 
-    @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
-    suspend fun getNoteById(id: Long): Note?
+    @Query("SELECT * FROM notes WHERE userId = :userId AND title LIKE '%' || :query || '%' ORDER BY timestamp DESC")
+    fun searchUserNotes(userId: Long, query: String): Flow<List<Note>>
 
-    //RETURNS THE ID OF THE INSERTED NOTE
-    @Insert//(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun createNewNote(note: Note) : Long
+    @Query("SELECT * FROM notes WHERE id = :id AND userId = :userId LIMIT 1")
+    suspend fun getNoteById(userId: Long, id: Long): Note?
+
+    @Insert
+    suspend fun createNewNote(note: Note): Long //returns the notes id
 
     @Update
     suspend fun editNote(note: Note)

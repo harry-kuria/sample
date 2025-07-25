@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,9 +38,22 @@ fun EditNoteScreen(noteId: Long,
     val coroutineScope = rememberCoroutineScope()
 
 
+//    LaunchedEffect(noteId) {
+//        viewModel.loadNote(noteId)
+//        viewModel.startAutoSave()
+//    }
     LaunchedEffect(noteId) {
         viewModel.loadNote(noteId)
     }
+
+    val note by viewModel.note.collectAsState()
+
+    LaunchedEffect(note) {
+        if (note != null) {
+            viewModel.startAutoSave()
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -73,5 +87,11 @@ fun EditNoteScreen(noteId: Long,
                 .weight(1f),
             maxLines = Int.MAX_VALUE
         )
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearCurrentNote()
+            viewModel.autoSaveJob?.cancel()
+        }
     }
 }
