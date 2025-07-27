@@ -3,6 +3,7 @@ package com.example.gettingstartedwithjetpackcompose.ui.theme.navigation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -56,11 +57,14 @@ fun AppNavHost(
             )
         }
 
+//        composable(Routes.HOME) {
+//            NotesHomeScreen(
+//                onNavigateToMyAccount = { navController.navigate(Routes.MY_ACCOUNT) },
+//                onNavigateToEditNote = { noteId -> navController.navigate("${Routes.EDIT_NOTE}/$noteId") }
+//            )
+//        }
         composable(Routes.HOME) {
-            NotesHomeScreen(
-                onNavigateToMyAccount = { navController.navigate(Routes.MY_ACCOUNT) },
-                onNavigateToEditNote = { noteId -> navController.navigate("${Routes.EDIT_NOTE}/$noteId") }
-            )
+            NotesHomeScreen(navController , viewModel = hiltViewModel())
         }
 
         composable(Routes.MY_ACCOUNT) {

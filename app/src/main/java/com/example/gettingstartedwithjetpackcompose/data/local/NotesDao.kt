@@ -22,7 +22,7 @@ interface NotesDao {
     @Insert
     suspend fun createNewNote(note: Note): Long //returns the notes id
 
-    @Update
+    @Update(entity = Note::class)
     suspend fun editNote(note: Note)
 
     @Delete

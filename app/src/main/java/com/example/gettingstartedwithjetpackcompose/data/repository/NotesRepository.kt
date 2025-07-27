@@ -47,7 +47,20 @@ class NotesRepository @Inject constructor(private val notesDao: NotesDao, privat
         }
     }
 
-    suspend fun edit(note: Note) = notesDao.editNote(note)
+//    suspend fun edit(note: Note) {
+//        Log.d("RoomWrite", "Saving to Room: title='${note.title}', id=${note.id}")
+//        notesDao.editNote(note)
+//    }
+    suspend fun edit(note: Note) {
+        Log.d("NotesRepository", "Editing note ${note.id}")
+        try {
+            notesDao.editNote(note)
+            Log.d("NotesRepository", "Successfully edited note ${note.id}")
+        } catch (e: Exception) {
+            Log.e("NotesRepository", "Error editing note", e)
+            throw e
+        }
+    }
 
     suspend fun delete(note: Note) = notesDao.deleteNote(note)
 
