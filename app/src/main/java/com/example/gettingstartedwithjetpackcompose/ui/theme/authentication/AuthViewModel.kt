@@ -74,8 +74,103 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
     fun onLoginEmailChange(e: String) = _loginState.update { it.copy(email = e.trim(), error = null) }
     fun onLoginPasswordChange(p: String) = _loginState.update { it.copy(password = p.trim(), error = null) }
 
+//    fun login() = viewModelScope.launch {
+//        _loginState.update {it.copy(error = null)}
+//        val lState = _loginState.value
+//        if (lState.email.isEmpty() || lState.password.isEmpty()) {
+//            _loginState.update { it.copy(error = "Email and password are required") }
+//            return@launch
+//        }
+//
+//        _loginState.update { it.copy(isLoading = true) }
+//
+//        val emailExists = withContext(Dispatchers.IO) {
+//            userAuthRepository.getUserByEmail(lState.email) != null
+//        }
+//
+//        if (! emailExists) {
+//            _loginState.update { it.copy(isLoading = false, isLoggedIn = false, error = "Email not found. Register instead") }
+//            return@launch
+//        }
+//
+////        val user = withContext(Dispatchers.IO) {
+////            userAuthRepository.loginUser(lState.email, lState.password)
+////        }
+////
+////        val success = user != null
+//
+//        val result = withContext(Dispatchers.IO) {
+//            userAuthRepository.loginUser(lState.email, lState.password)
+//        }
+//
+//        if (result.isSuccess) {
+//            val user = result.getOrNull()!!
+//            val fullUser = userAuthRepository.getUserByEmail(user.email)
+//
+//            if (fullUser != null) {
+//                userAuthRepository.saveUserAccountData(
+//                    id = fullUser.id, email = fullUser.email, username = fullUser.username
+//                )
+//                userAuthRepository.updateLoggedInStatus(fullUser.id, true)
+//                Log.d("AuthViewModel", "Logged in with user ID: ${fullUser.id}")
+//            }
+//
+//            _loginState.update {
+//                it.copy(
+//                    isLoading = false,
+//                    isLoggedIn = true,
+//                    error = null
+//                )
+//            }
+//        } else {
+//            _loginState.update {
+//                it.copy(
+//                    isLoading = false,
+//                    isLoggedIn = false,
+//                    error = result.exceptionOrNull()?.message ?: "Login failed"
+//                )
+//            }
+//        }
+//
+//
+//        _loginState.update {
+//            it.copy(
+//                isLoading = false, isLoggedIn = success,
+//                error = if (!success) "Incorrect email or password" else null
+//            )
+//        }
+//
+////        if (success) {
+////            userAuthRepository.saveUserAccountData(id = user.id , email = lState.email, username = user.username)
+////        }
+//
+////        if (success && user != null) {
+////            userAuthRepository.saveUserAccountData(
+////                id = user.id,
+////                email = user.email,
+////                username = user.username
+////            )
+////            Log.d("AuthViewModel", "Saved login user with id: ${user.id}")
+////        }
+//
+//        if (success && user != null) {
+//            val fullUser = userAuthRepository.getUserByEmail(user.email)
+//            if (fullUser != null) {
+//                userAuthRepository.saveUserAccountData(
+//                    id = fullUser.id,
+//                    email = fullUser.email,
+//                    username = fullUser.username
+//                )
+//                userAuthRepository.updateLoggedInStatus(id = fullUser.id, isLoggedIn = true)
+//                Log.d("AuthViewModel", "Saved login user with real ID: ${fullUser.id}")
+//            } else {
+//                Log.e("AuthViewModel", "User found by credentials but not by email. Unexpected.")
+//            }
+//        }
+//    }
     fun login() = viewModelScope.launch {
-        _loginState.update {it.copy(error = null)}
+        _loginState.update { it.copy(error = null) }
+
         val lState = _loginState.value
         if (lState.email.isEmpty() || lState.password.isEmpty()) {
             _loginState.update { it.copy(error = "Email and password are required") }
@@ -88,55 +183,42 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
             userAuthRepository.getUserByEmail(lState.email) != null
         }
 
-        if (! emailExists) {
-            _loginState.update { it.copy(isLoading = false, isLoggedIn = false, error = "Email not found. Register instead") }
+        if (!emailExists) {
+            _loginState.update {
+                it.copy(isLoading = false, isLoggedIn = false, error = "Email not found. Register instead")
+            }
             return@launch
         }
 
-        val user = withContext(Dispatchers.IO) {
+        val result = withContext(Dispatchers.IO) {
             userAuthRepository.loginUser(lState.email, lState.password)
         }
 
-        val success = user != null
+        result.fold( //fold handles success and failure cases all at once: no if...else needed
+            onSuccess = { user ->
+                val fullUser = userAuthRepository.getUserByEmail(user.email)
+                if (fullUser != null) {
+                    userAuthRepository.saveUserAccountData(
+                        id = fullUser.id,
+                        email = fullUser.email,
+                        username = fullUser.username
+                    )
+                    userAuthRepository.updateLoggedInStatus(fullUser.id, true)
+                    Log.d("AuthViewModel", "Logged in with user ID: ${fullUser.id}")
+                }
 
-        _loginState.update {
-            it.copy(
-                isLoading = false, isLoggedIn = success,
-                error = if (!success) "Incorrect email or password" else null
-            )
-        }
-
-//        if (success) {
-//            userAuthRepository.saveUserAccountData(id = user.id , email = lState.email, username = user.username)
-//        }
-
-//        if (success && user != null) {
-//            userAuthRepository.saveUserAccountData(
-//                id = user.id,
-//                email = user.email,
-//                username = user.username
-//            )
-//            Log.d("AuthViewModel", "Saved login user with id: ${user.id}")
-//        }
-
-        if (success && user != null) {
-            val fullUser = userAuthRepository.getUserByEmail(user.email)
-            if (fullUser != null) {
-                userAuthRepository.saveUserAccountData(
-                    id = fullUser.id,
-                    email = fullUser.email,
-                    username = fullUser.username
-                )
-                userAuthRepository.updateLoggedInStatus(id = fullUser.id, isLoggedIn = true)
-                Log.d("AuthViewModel", "Saved login user with real ID: ${fullUser.id}")
-            } else {
-                Log.e("AuthViewModel", "User found by credentials but not by email. Unexpected.")
+                _loginState.update {
+                    it.copy(isLoading = false, isLoggedIn = true, error = null)
+                }
+            },
+            onFailure = { error ->
+                _loginState.update {
+                    it.copy(isLoading = false, isLoggedIn = false, error = error.message ?: "Login failed")
+                }
             }
-        }
-
-
-
+        )
     }
+
 
     fun clearLoginSuccess() = _loginState.update { it.copy(isLoggedIn = false) }
 

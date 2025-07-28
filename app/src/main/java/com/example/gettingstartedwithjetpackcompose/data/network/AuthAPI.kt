@@ -1,20 +1,21 @@
 package com.example.gettingstartedwithjetpackcompose.data.network
 
+import com.example.gettingstartedwithjetpackcompose.data.network.request.LoginRequest
+import com.example.gettingstartedwithjetpackcompose.data.network.response.LoginResponse
+import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface AuthAPI{
-    @POST("")//enter login endpoint
-    suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
+interface AuthApi {
 
-    @POST("")//enter register endpoint
-    suspend fun register(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
-
-    @GET("")//enter logout endpoint
-    suspend fun logout (@Body logoutRequest: LogoutRequest): Response<LogoutResponse>
-
-
+    @POST("login")
+    suspend fun login(
+        @Header("device-serial") deviceSerial: String = "1234567890",
+        //headers return metadata about the request - this is custom
+        @Body request: LoginRequest
+        //turns LoginRequest into a json object
+    ): Response<LoginResponse>
 }
 
 //some other tags
