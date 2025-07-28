@@ -33,6 +33,8 @@ class MyAccountViewModel @Inject constructor(private val userAuthRepository: Use
                     MyAccountEvent.AboutClicked -> _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToAbout)
 
                     MyAccountEvent.LogoutClicked -> {
+                        val currentUserId = userAuthRepository.getUserId()
+                        userAuthRepository.updateLoggedInStatus(id = currentUserId, isLoggedIn = false)
                         userAuthRepository.clearUserAccountData()
                         _myAccountUiEvent.emit(MyAccountUiEvent.NavigateToLogin)
                     }

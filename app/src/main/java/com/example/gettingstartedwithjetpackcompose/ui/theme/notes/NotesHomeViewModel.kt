@@ -379,7 +379,7 @@ class NotesHomeViewModel @Inject constructor(
     fun triggerAutoSave() {
         autoSaveJob?.cancel()
         autoSaveJob = viewModelScope.launch {
-            delay(1000) // 1 second debounce
+            delay(500) // 0.5 second debounce
             saveCurrentNote()
         }
     }

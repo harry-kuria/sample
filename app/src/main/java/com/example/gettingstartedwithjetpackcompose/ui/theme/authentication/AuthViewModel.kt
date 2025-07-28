@@ -119,7 +119,6 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
 //            Log.d("AuthViewModel", "Saved login user with id: ${user.id}")
 //        }
 
-
         if (success && user != null) {
             val fullUser = userAuthRepository.getUserByEmail(user.email)
             if (fullUser != null) {
@@ -128,11 +127,14 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
                     email = fullUser.email,
                     username = fullUser.username
                 )
+                userAuthRepository.updateLoggedInStatus(id = fullUser.id, isLoggedIn = true)
                 Log.d("AuthViewModel", "Saved login user with real ID: ${fullUser.id}")
             } else {
                 Log.e("AuthViewModel", "User found by credentials but not by email. Unexpected.")
             }
         }
+
+
 
     }
 

@@ -91,11 +91,9 @@ fun SplashScreen(
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_animation))
     val progress by animateLottieCompositionAsState(composition, speed = 1f)
 
-    // Auth states
     val loggedIn by authVm.isLoggedIn.collectAsState(initial = false)
     val sessionReady by authVm.isSessionReady.collectAsState()
 
-    // User ID state
     val currentUserId by notesVm.currentUserId.collectAsState()
 
     LaunchedEffect(progress, sessionReady, loggedIn, currentUserId) {
@@ -117,7 +115,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(Color.White), //(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         LottieAnimation(

@@ -34,6 +34,9 @@ interface UserDao{
     @Query("""SELECT * FROM users WHERE email = :email AND passwordHash = :password LIMIT 1""")
     suspend fun login(email: String, password: String): User?
 
+    @Query("UPDATE Users SET isLoggedIn = :isLoggedIn WHERE id = :id")
+    suspend fun updateIsLoggedIn(isLoggedIn: Boolean, id: Long): Int
+
 //    @Query("SELECT * FROM Users WHERE email = :email LIMIT 1")
 //    suspend fun deleteUserByEmail(email: String)
 

@@ -26,6 +26,7 @@ class UserAuthRepository @Inject constructor(private val userDao: UserDao,
 
     suspend fun getUserId(): Long = dataStore.data.first().id
 
+
     //Functions for room database
     suspend fun getUserByEmail(email: String): User?{
         return userDao.findByEmail(email)
@@ -48,6 +49,10 @@ class UserAuthRepository @Inject constructor(private val userDao: UserDao,
         val id = userDao.insertUser(user)
         saveUserAccountData(id = id, email = user.email, username = user.username)
         return id
+    }
+
+    suspend fun updateLoggedInStatus(id : Long, isLoggedIn: Boolean) {
+        userDao.updateIsLoggedIn(id = id, isLoggedIn = isLoggedIn)
     }
 
 //    suspend fun deleteAllUsers() {

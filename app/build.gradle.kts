@@ -108,7 +108,7 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.9.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
 
     implementation ("androidx.compose.material:material:1.6.0")
@@ -119,6 +119,10 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("androidx.compose.material:material:1.5.0") // for SwipeToDismiss
+
+    debugImplementation("com.github.chuckerteam.chucker:library:3.5.2")
+    releaseImplementation("com.github.chuckerteam.chucker:library-no-op:3.5.2")
+
 
 }
 
