@@ -23,7 +23,7 @@ object ApiClient{
         //app needs OkHTTPClient to connect to the server as it acts as a handler
         //making customizations to the client
         .addInterceptor(loggingInterceptor)
-        //.addInterceptor(chuckerInterceptor.build())
+        //.addInterceptor(chuckerInterceptor)
         .build()
 
     private val retrofit = Retrofit.Builder()
