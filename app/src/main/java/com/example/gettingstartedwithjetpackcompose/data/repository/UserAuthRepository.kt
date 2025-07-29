@@ -50,7 +50,7 @@ class UserAuthRepository @Inject constructor(private val userDao: UserDao,
             try {
                 //calls the API
                 val response = ApiClient.authApi.login(
-                    deviceSerial = "1234567890",
+                    //deviceSerial = "1234567890",
                     request = LoginRequest(email = email, pin = pin)
                 )
 
@@ -65,10 +65,10 @@ class UserAuthRepository @Inject constructor(private val userDao: UserDao,
                         userDao.login(email, pin)
                         return@withContext Result.success(user) // returns
                     } else {
-                        return@withContext Result.failure(Exception("Empty response body"))
+                        return@withContext Result.failure(Exception("Login failed: Server responded with success but sent no data"))
                     }
                 } else {
-                    return@withContext Result.failure(Exception("Empty response"))
+                    return@withContext Result.failure(Exception("Login failed: HTTP ${response.code()} - ${response.message()}"))
                 }
             } catch (e: Exception) {
                 val localUser = userDao.login(email, pin)

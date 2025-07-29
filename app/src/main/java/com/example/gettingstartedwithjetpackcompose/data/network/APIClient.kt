@@ -1,6 +1,9 @@
 package com.example.gettingstartedwithjetpackcompose.data.network
 
+import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.chuckerteam.chucker.api.RetentionManager
+import com.example.gettingstartedwithjetpackcompose.MyApplication
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,13 +20,39 @@ object ApiClient{
         //others include NONE(returns nothing), BASIC(request and response only), HEADERS(BASIC + headers)
     }
 
-    //private val chuckerInterceptor = ChuckerInterceptor.Builder(/*context = */)
+    private val chuckerCollector = ChuckerCollector(
+        context = MyApplication.appContext,
+        showNotification = true, //allows to see logs in notification. set to false when in production to keep sensitive information from users
+        retentionPeriod = RetentionManager.Period.ONE_DAY //keeps logs for one day before deleting
+    )
+
+    private val chuckerInterceptor = ChuckerInterceptor.Builder(MyApplication.appContext)
+        .collector(chuckerCollector)
+        .maxContentLength(250000L)
+        .redactHeaders("AuthToken") //hide sensitive headers from users shows ***
+        .alwaysReadResponseBody(true)
+        //.addBodyDecoder(decoder) //decodes the body
+        .createShortcut(true) //allows to create a shortcut to chucker without having to go through the app itself
+        .build()
 
     private val client = OkHttpClient.Builder()
         //app needs OkHTTPClient to connect to the server as it acts as a handler
         //making customizations to the client
+
+        //through this, we have one source of truth
         .addInterceptor(loggingInterceptor)
-        //.addInterceptor(chuckerInterceptor)
+        .addInterceptor {
+            val request = it.request().newBuilder()
+                .addHeader("Authorization", "Bearer 50888|eOlfVR9LwpbwAxh9QTLNPaU8NZivNFXZbdcc3NSW2998c845")
+                .addHeader("app-key", "97fb852f-f24d-49d5-9375-6825bde2b3de")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json")
+                .addHeader("device-serial", "1234567890")
+                .addHeader("device-fingerprint", "184e757995907383285ca8faf5ce5f30")
+                .build()
+            it.proceed(request)
+        }
+        .addInterceptor(chuckerInterceptor)
         .build()
 
     private val retrofit = Retrofit.Builder()

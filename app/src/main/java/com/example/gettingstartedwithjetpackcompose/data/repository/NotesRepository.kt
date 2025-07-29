@@ -24,17 +24,6 @@ class NotesRepository @Inject constructor(private val notesDao: NotesDao, privat
 
     fun search(userId: Long,query: String) = notesDao.searchUserNotes(userId,query)
 
-//    suspend fun createNote(note: Note) : Long {
-//        val user = userDao.findById(note.userId)
-//        if (user != null) {
-//            notesDao.createNewNote(note)
-//        }else{
-//            //throw Exception("User not found")
-//            Log.e("NotesRepository", "User with id ${note.userId} not found")
-//        }
-//        return note.id
-//    }
-
     suspend fun createNote(note: Note): Long {
         val user = userDao.findById(note.userId)
         return if (user != null) {
@@ -47,10 +36,6 @@ class NotesRepository @Inject constructor(private val notesDao: NotesDao, privat
         }
     }
 
-//    suspend fun edit(note: Note) {
-//        Log.d("RoomWrite", "Saving to Room: title='${note.title}', id=${note.id}")
-//        notesDao.editNote(note)
-//    }
     suspend fun edit(note: Note) {
         Log.d("NotesRepository", "Editing note ${note.id}")
         try {
@@ -64,19 +49,19 @@ class NotesRepository @Inject constructor(private val notesDao: NotesDao, privat
 
     suspend fun delete(note: Note) = notesDao.deleteNote(note)
 
-    suspend fun setLastOpenedNoteId(noteId: Long) {
-        dataStore.updateData { current ->
-            current.toBuilder()
-                .setLastOpenedNoteId(noteId)
-                .build()
-        }
-    }
-
-    suspend fun clearLastOpenedNoteId() {
-        dataStore.updateData { current ->
-            current.toBuilder()
-                .setLastOpenedNoteId(-1L)
-                .build()
-        }
-    }
+//    suspend fun setLastOpenedNoteId(noteId: Long) {
+//        dataStore.updateData { current ->
+//            current.toBuilder()
+//                .setLastOpenedNoteId(noteId)
+//                .build()
+//        }
+//    }
+//
+//    suspend fun clearLastOpenedNoteId() {
+//        dataStore.updateData { current ->
+//            current.toBuilder()
+//                .setLastOpenedNoteId(-1L)
+//                .build()
+//        }
+//    }
 }

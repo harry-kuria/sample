@@ -18,20 +18,16 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,10 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @Composable
@@ -55,10 +48,10 @@ fun EditNoteScreen(
 ) {
     val title by viewModel.noteTitle.collectAsState()
     val content by viewModel.noteContent.collectAsState()
-    val note by viewModel.note.collectAsState()
+    //val note by viewModel.note.collectAsState()
 
     val contentFocusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
+    //val focusManager = LocalFocusManager.current
 
 
     // Load note when screen opens or noteId changes
@@ -111,10 +104,9 @@ fun EditNoteScreen(
                     }
                     innerTextField()
                 },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    autoCorrect = true,
-                    imeAction = ImeAction.Next
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences,
+                    autoCorrectEnabled = true,
+                    imeAction = ImeAction.Next,
                 ),
                 keyboardActions = KeyboardActions(onNext = { contentFocusRequester.requestFocus() }),
             )
@@ -143,12 +135,10 @@ fun EditNoteScreen(
                     }
                     innerTextField()
                 },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    autoCorrect = true,
-                    imeAction = ImeAction.Default
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences,
+                    autoCorrectEnabled = true,
+                    imeAction = ImeAction.Default,
                 ),
-                //keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             )
         }
     }

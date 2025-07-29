@@ -36,13 +36,13 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
         .map { it.username }
         .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), "")
 
-    private val _isSessionValid = MutableStateFlow<Boolean?>(null)
-    val isSessionValid: StateFlow<Boolean?> = _isSessionValid
-
-    fun checkSessionValid() = viewModelScope.launch {
-        val isValid = userAuthRepository.isSessionValid()
-        _isSessionValid.value = isValid
-    }
+//    private val _isSessionValid = MutableStateFlow<Boolean?>(null)
+//    val isSessionValid: StateFlow<Boolean?> = _isSessionValid
+//
+//    fun checkSessionValid() = viewModelScope.launch {
+//        val isValid = userAuthRepository.isSessionValid()
+//        _isSessionValid.value = isValid
+//    }
 
 
     init{
@@ -260,12 +260,6 @@ class AuthViewModel @Inject constructor(private val userAuthRepository: UserAuth
                 }
                 return@launch
             }
-        }
-
-        val passValidate = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$".toRegex()
-        if (! passValidate.matches(rState.password)){
-            _registerState.update { it.copy(error = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number", isLoading = false) }
-            return@launch
         }
 
         val newUser =
