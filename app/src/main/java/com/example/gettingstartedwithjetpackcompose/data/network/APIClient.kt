@@ -4,6 +4,7 @@ import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
 import com.example.gettingstartedwithjetpackcompose.MyApplication
+import com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard.AccountsAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -64,5 +65,6 @@ object ApiClient{
 
     val authApi: AuthApi = retrofit.create(AuthApi::class.java)
     //can add more instances here eg //val authApi: NotesApi = retrofit.create(NotesApi::class.java)
+    val accountsApi: AccountsAPI = retrofit.create(AccountsAPI::class.java)
 
 }

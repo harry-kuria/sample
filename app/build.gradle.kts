@@ -119,6 +119,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("androidx.compose.material:material:1.5.0") // for SwipeToDismiss
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha") // for SwipeRefresh
 
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")

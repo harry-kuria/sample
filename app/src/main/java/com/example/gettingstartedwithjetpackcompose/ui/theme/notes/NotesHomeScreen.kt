@@ -11,15 +11,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-//import androidx.compose.foundation.rememberScrollState
-//import androidx.compose.foundation.verticalScroll
-//import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -33,43 +29,38 @@ import androidx.compose.material.rememberDismissState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.gettingstartedwithjetpackcompose.R
 import com.example.gettingstartedwithjetpackcompose.data.local.Note
-import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.AuthViewModel
 import com.example.gettingstartedwithjetpackcompose.ui.theme.navigation.Routes
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
-
 @Composable
 fun NoteItem( note: Note, onNavigateToEditNote: (Long) -> Unit, modifier: Modifier = Modifier
 ) {
@@ -141,9 +132,7 @@ fun SearchBar( query: String, onQueryChange: (String) -> Unit, onSearch: () -> U
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterialApi::class
-)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun NotesHomeScreen(
     navController: NavController,
@@ -169,6 +158,14 @@ fun NotesHomeScreen(
                     titleContentColor = Color.Black,
                 ),
                 actions = {
+                    IconButton(onClick = { navController.navigate(Routes.ACCOUNT_DASHBOARD) }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_dashboard),
+                            contentDescription = "account dashboard",
+                            tint = Color.Black,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    };
                     IconButton(onClick = { navController.navigate(Routes.MY_ACCOUNT) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,

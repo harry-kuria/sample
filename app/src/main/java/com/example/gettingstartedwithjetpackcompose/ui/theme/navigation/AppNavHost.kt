@@ -14,6 +14,8 @@ import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.scre
 import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens.RegisterScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountRoute
 import com.example.gettingstartedwithjetpackcompose.ui.theme.notes.EditNoteScreen
+import com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard.AccountsDashboardScreen
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -24,6 +26,7 @@ object Routes {
     const val HOME = "notes_home_screen"
     const val MY_ACCOUNT = "my_account_screen"
     const val EDIT_NOTE = "edit_note_screen"
+    const val ACCOUNT_DASHBOARD = "account_dashboard"
 }
 
 
@@ -81,6 +84,13 @@ fun AppNavHost(
             } else {
                 Text("Invalid note ID")
             }
+        }
+
+        composable(Routes.ACCOUNT_DASHBOARD){
+            AccountsDashboardScreen(
+                viewModel = hiltViewModel(),
+                navController
+            )
         }
     }
 }
