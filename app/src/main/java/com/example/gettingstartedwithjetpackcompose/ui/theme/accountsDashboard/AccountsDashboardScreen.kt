@@ -17,13 +17,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,10 +47,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.gettingstartedwithjetpackcompose.R
@@ -56,6 +61,67 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 //Card version
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(Color.LightGray, RoundedCornerShape(6.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                textStyle = TextStyle(fontSize = 14.sp, color = Color.Black),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = { focusManager.clearFocus()
+                        onSearch()
+                    }
+                ),
+                decorationBox = { innerTextField ->
+                    if (query.isEmpty()) {
+                        Text(
+                            text = "Search by name or phone number",
+                            style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                        )
+                    }
+                    innerTextField()
+                }
+            )
+
+            IconButton( onClick = { focusManager.clearFocus()
+                    onSearch() },
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                    tint = Color.Gray
+                )
+            }
+        }
+    }
+}
+
+
+
 @Composable
 fun ExpandableUserCard(account: AccountsDto) {
     var expanded by remember { mutableStateOf(false) }
@@ -78,7 +144,7 @@ fun ExpandableUserCard(account: AccountsDto) {
                 }
 
                 IconButton(onClick = { expanded = !expanded }) {
-                    Icon( imageVector = if(expanded) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight,
+                    Icon( imageVector = if(expanded) Icons.Default.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
                          contentDescription = "dropdown", tint = Color.DarkGray
                     )
                 }
@@ -107,8 +173,9 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
     val accounts by viewModel.accounts.collectAsState()
     val error by viewModel.error.collectAsState()
     val loading by viewModel.isLoading.collectAsState()
+    val focusManager = LocalFocusManager.current
 
-    val refreshState = rememberSwipeRefreshState(isRefreshing = loading)
+    val query by viewModel.searchQuery.collectAsState()
 
     Scaffold(
         topBar = {
@@ -144,11 +211,18 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
         Column(Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(paddingValues)) {
-            Text("All Users", color = Color.Black,
-                //textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Normal),
-                modifier = Modifier.fillMaxWidth() .padding(vertical = 16.dp))
+            .padding(paddingValues)
+            .padding(horizontal = 3.dp)) {
+//            Text("All Users", color = Color.Black,
+//                //textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Normal),
+//                modifier = Modifier.fillMaxWidth() .padding(vertical = 16.dp))
+            SearchBar(
+                query = query,
+                onQueryChange = { viewModel.updateSearchQuery(it) },
+                onSearch = { focusManager.clearFocus()
+                    viewModel.loadAccounts(query) }
+            )
 
             val refreshState = rememberSwipeRefreshState(isRefreshing = loading)
 

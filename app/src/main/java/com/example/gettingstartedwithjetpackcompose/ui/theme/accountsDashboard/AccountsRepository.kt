@@ -3,8 +3,8 @@ package com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard
 import javax.inject.Inject
 
 class AccountsRepository @Inject constructor(private val accountsApi : AccountsAPI) {
-    suspend fun getAccounts() : List<AccountsDto> {
-        val response = accountsApi.getAccounts()
+    suspend fun getAccounts(query : String? = null) : List<AccountsDto> {
+        val response = accountsApi.getAccounts(query)
         if (response.isSuccessful) {
             return response.body()?.data ?.data?: emptyList()
         } else {

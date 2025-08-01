@@ -45,7 +45,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -165,7 +164,8 @@ fun NotesHomeScreen(
                             tint = Color.Black,
                             modifier = Modifier.size(40.dp)
                         )
-                    };
+                    }
+
                     IconButton(onClick = { navController.navigate(Routes.MY_ACCOUNT) }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
@@ -191,6 +191,7 @@ fun NotesHomeScreen(
             }
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
+
     ) { innerPadding ->
         Box(
             modifier = Modifier
