@@ -15,6 +15,8 @@ import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.scre
 import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountRoute
 import com.example.gettingstartedwithjetpackcompose.ui.theme.notes.EditNoteScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard.AccountsDashboardScreen
+import com.example.gettingstartedwithjetpackcompose.ui.theme.landingPage.LandingRoute
+import com.example.gettingstartedwithjetpackcompose.ui.theme.landingPage.LandingScreen
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -23,6 +25,7 @@ object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
     const val REGISTER = "register"
+    const val LANDING = "landing_page"
     const val HOME = "notes_home_screen"
     const val MY_ACCOUNT = "my_account_screen"
     const val EDIT_NOTE = "edit_note_screen"
@@ -60,6 +63,10 @@ fun AppNavHost(
             )
         }
 
+        composable(Routes.LANDING) {
+            LandingRoute( navController = navController, viewModel = hiltViewModel())
+        }
+
 //        composable(Routes.HOME) {
 //            NotesHomeScreen(
 //                onNavigateToMyAccount = { navController.navigate(Routes.MY_ACCOUNT) },
@@ -67,11 +74,11 @@ fun AppNavHost(
 //            )
 //        }
         composable(Routes.HOME) {
-            NotesHomeScreen(navController , viewModel = hiltViewModel())
+            NotesHomeScreen(navController = navController , viewModel = hiltViewModel())
         }
 
         composable(Routes.MY_ACCOUNT) {
-            MyAccountRoute(navController)
+            MyAccountRoute(navController = navController)
         }
 
         composable("${Routes.EDIT_NOTE}/{noteId}") { backStackEntry ->

@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class AccountsResponse(
     val status : Int,
-    val data : PaignatedAccountsData,
+    val data : PaginatedAccountsData,
     val message : String
 )
 
-data class PaignatedAccountsData(
+data class PaginatedAccountsData(
     @SerializedName("current_page") val currentPage : Int,
     val data : List<AccountsDto>
 )

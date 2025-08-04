@@ -23,7 +23,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 
-
 @ExperimentalCoroutinesApi
 @OptIn(FlowPreview::class)
 //@Composable
@@ -100,7 +99,7 @@ fun SplashScreen(
 
         val destination = when {
             !loggedIn -> Routes.LOGIN
-            currentUserId > 0L -> Routes.ACCOUNT_DASHBOARD // Or your default destination
+            currentUserId > 0L -> Routes.LANDING // Or your default destination
             else -> Routes.LOGIN // Fallback
         }
 

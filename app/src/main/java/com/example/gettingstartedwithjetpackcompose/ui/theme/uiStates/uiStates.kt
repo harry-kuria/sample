@@ -30,3 +30,7 @@ data class MyAccountUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
+
+data class LandingUiState(
+    val username: String = ""
+)
