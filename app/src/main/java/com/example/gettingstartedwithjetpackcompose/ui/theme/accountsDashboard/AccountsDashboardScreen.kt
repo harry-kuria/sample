@@ -54,6 +54,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.gettingstartedwithjetpackcompose.R
 import com.example.gettingstartedwithjetpackcompose.ui.theme.navigation.Routes
@@ -62,10 +63,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 //Card version
 @Composable
-fun SearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit
+fun SearchBar( query: String, onQueryChange: (String) -> Unit, onSearch: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -121,9 +119,8 @@ fun SearchBar(
 }
 
 
-
 @Composable
-fun ExpandableUserCard(account: AccountsDto) {
+fun ExpandableUserCard(account: AccountsDto, navController : NavController) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -136,16 +133,28 @@ fun ExpandableUserCard(account: AccountsDto) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Column(modifier = Modifier.weight(1f)){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
                     //Text(text = account.id, style = MaterialTheme.typography.headlineMedium)
-                    Text(text = account.names, style = MaterialTheme.typography.titleMedium, color = Color.Black)
-                    Text(text = account.phone, style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+                    Text(
+                        text = account.names,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = account.phone,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
                 }
 
                 IconButton(onClick = { expanded = !expanded }) {
-                    Icon( imageVector = if(expanded) Icons.Default.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                         contentDescription = "dropdown", tint = Color.DarkGray
+                    Icon(
+                        imageVector = if (expanded) Icons.Default.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "dropdown", tint = Color.DarkGray
                     )
                 }
             }
@@ -153,13 +162,46 @@ fun ExpandableUserCard(account: AccountsDto) {
             AnimatedVisibility(visible = expanded) {
                 Column(modifier = Modifier.padding(top = 8.dp)) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("Gender: ${account.gender}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
-                    Text("KYC: ${account.kycStatus}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
-                    Text("UUID: ${account.uuid}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
-                    Text("Code: ${account.code}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
-                    Text("Notes: ${account.notes ?: "None"}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
-                    Text("Created: ${account.createdAt}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
-                    Text("Updated: ${account.updatedAt}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+                    Text(
+                        "Gender: ${account.gender}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        "KYC: ${account.kycStatus}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        "UUID: ${account.uuid}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        "Code: ${account.code}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        "Notes: ${account.notes ?: "None"}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        "Created: ${account.createdAt}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        "Updated: ${account.updatedAt}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(5.dp))
+                    TextButton(onClick = { navController.navigate("${Routes.ACCOUNT_DETAILS}/${account.uuid}") }) {
+                        Text(text = "See more...", color = Color.Blue)
+                    }
                 }
             }
         }
@@ -169,7 +211,10 @@ fun ExpandableUserCard(account: AccountsDto) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), navController : NavHostController) {
+fun AccountsDashboardScreen(
+    viewModel: DashboardViewModel = hiltViewModel(),
+    navController: NavHostController
+) {
     val accounts by viewModel.accounts.collectAsState()
     val error by viewModel.error.collectAsState()
     val loading by viewModel.isLoading.collectAsState()
@@ -208,11 +253,13 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
         },
     ) { paddingValues ->
 
-        Column(Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(paddingValues)
-            .padding(horizontal = 3.dp)) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(paddingValues)
+                .padding(horizontal = 3.dp)
+        ) {
 //            Text("All Users", color = Color.Black,
 //                //textAlign = TextAlign.Center,
 //                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Normal),
@@ -220,8 +267,10 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
             SearchBar(
                 query = query,
                 onQueryChange = { viewModel.updateSearchQuery(it) },
-                onSearch = { focusManager.clearFocus()
-                    viewModel.loadAccounts(query) }
+                onSearch = {
+                    focusManager.clearFocus()
+                    viewModel.loadAccounts(query)
+                }
             )
 
             val refreshState = rememberSwipeRefreshState(isRefreshing = loading)
@@ -232,10 +281,15 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
             ) {
                 when {
                     error != null -> {
-                        Column(modifier = Modifier.fillMaxSize().padding(16.dp) ,
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center) {
-                            Row{Text(text = error ?: "", color = Color.Red)
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Row {
+                                Text(text = error ?: "", color = Color.Red)
                                 TextButton(onClick = { viewModel.loadAccounts() }) { Text("Retry") }
                             }
                         }
@@ -252,12 +306,13 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
 
                     else -> {
                         LazyColumn(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
                                 .background(Color.White),
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                         ) {
                             items(accounts) { account ->
-                                ExpandableUserCard(account)
+                                ExpandableUserCard(account, navController = navController)
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
                         }
@@ -267,6 +322,7 @@ fun AccountsDashboardScreen(viewModel: DashboardViewModel = hiltViewModel(), nav
         }
     }
 }
+
 
 
 //TABLE VERSION

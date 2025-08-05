@@ -1,7 +1,9 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +37,6 @@ class DashboardViewModel @Inject constructor(
         loadAccounts()
     }
 
-
     fun loadAccounts(query: String? = null) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -53,5 +54,31 @@ class DashboardViewModel @Inject constructor(
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
+    }
+
+    //for the account details
+    private val _accountDetails = MutableStateFlow<FullAccountDetailsDto?>(null)
+    val accountDetails: StateFlow<FullAccountDetailsDto?> = _accountDetails.asStateFlow()
+
+    private val _detailsLoading = MutableStateFlow(false)
+    val detailsLoading: StateFlow<Boolean> = _detailsLoading.asStateFlow()
+
+    private val _detailsError = MutableStateFlow<String?>(null)
+    val detailsError: StateFlow<String?> = _detailsError.asStateFlow()
+
+    fun loadAccountDetails(uuid: String) {
+        viewModelScope.launch {
+            _detailsLoading.value = true
+            try {
+                val details = repository.getFullAccountDetails(uuid = uuid, extraInfo = true)
+                Log.d("DETAILS_API", "Loaded account details: ${Gson().toJson(details)}")
+                _accountDetails.value = details
+                _detailsError.value = null
+            } catch (e: Exception) {
+                _detailsError.value = e.message ?: "Unable to load account details"
+            } finally {
+                _detailsLoading.value = false
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.gettingstartedwithjetpackcompose.ui.theme.navigation
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,14 +10,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gettingstartedwithjetpackcompose.SplashScreen
+import com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard.AccountDetailsScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.notes.NotesHomeScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens.LoginScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.authentication.screens.RegisterScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountRoute
 import com.example.gettingstartedwithjetpackcompose.ui.theme.notes.EditNoteScreen
 import com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard.AccountsDashboardScreen
+import com.example.gettingstartedwithjetpackcompose.ui.theme.accountsDashboard.DashboardViewModel
 import com.example.gettingstartedwithjetpackcompose.ui.theme.landingPage.LandingRoute
-import com.example.gettingstartedwithjetpackcompose.ui.theme.landingPage.LandingScreen
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -30,6 +32,7 @@ object Routes {
     const val MY_ACCOUNT = "my_account_screen"
     const val EDIT_NOTE = "edit_note_screen"
     const val ACCOUNT_DASHBOARD = "account_dashboard"
+    const val ACCOUNT_DETAILS = "account_details"
 }
 
 
@@ -99,5 +102,15 @@ fun AppNavHost(
                 navController
             )
         }
+
+        composable("${Routes.ACCOUNT_DETAILS}/{uuid}") { backStackEntry ->
+            val uuid = requireNotNull(backStackEntry.arguments?.getString("uuid")) {
+                "Missing uuid for AccountDetailsScreen"
+            }
+            Log.d("NAVIGATION", "Navigating to details for uuid= $uuid")
+            val viewModel: DashboardViewModel = hiltViewModel()
+            AccountDetailsScreen(uuid = uuid, viewModel = viewModel, navController = navController)
+        }
+
     }
 }
