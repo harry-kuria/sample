@@ -66,7 +66,7 @@ fun LoginScreen(onNavigateToLanding: () -> Unit, viewModel: AuthViewModel = hilt
             Card(
                 shape = RoundedCornerShape(24.dp), modifier = Modifier
                     .padding(horizontal = 24.dp)
-                    .padding(top = 60.dp),
+                    .padding(top = 120.dp),
                 elevation = CardDefaults.cardElevation(8.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White,
@@ -88,23 +88,21 @@ fun LoginScreen(onNavigateToLanding: () -> Unit, viewModel: AuthViewModel = hilt
                     //Text("to start your journey", fontFamily = Roboto, fontSize = 30.sp)
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    OutlinedTextField(
-                        value = state.username,
-                        onValueChange = viewModel::onLoginUsernameChange,
-                        label = { Text("Username") },
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black),
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Person,
-                                contentDescription = "Username icon"
-                            )
-                        }
+//                    OutlinedTextField(
+//                        value = state.username,
+//                        onValueChange = viewModel::onLoginUsernameChange,
+//                        label = { Text("Username") },
+//                        singleLine = true,
+//                        textStyle = LocalTextStyle.current.copy(color = Color.Black),
+//                        leadingIcon = {
+//                            Icon(
+//                                imageVector = Icons.Filled.Person,
+//                                contentDescription = "Username icon"
+//                            )
+//                        }
+//                    )
 
-
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(25.dp))
 
                     OutlinedTextField(
                         value = state.email,
