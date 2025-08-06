@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
@@ -40,6 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -54,14 +57,14 @@ import com.example.gettingstartedwithjetpackcompose.features.authentication.view
 @Composable
 //hint: declare the viewmodel as a constructor
 fun RegisterScreen(viewModel: AuthViewModel= hiltViewModel(),
-                   onNavigateToLogin: () -> Unit, onNavigateToHome: () -> Unit) {
+                   onNavigateToLogin: () -> Unit, onNavigateToLanding: () -> Unit) {
 
     // do away with view model factories
     val state by viewModel.registerState.collectAsState()
 
     LaunchedEffect(state.isRegistered) {
         if (state.isRegistered) {
-            onNavigateToHome()
+            onNavigateToLanding()
             viewModel.clearRegisterSuccess()
         }
     }
@@ -112,7 +115,11 @@ fun RegisterScreen(viewModel: AuthViewModel= hiltViewModel(),
                             imageVector = Icons.Filled.Person,
                             contentDescription = "Username icon"
                         )
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences,
+                        autoCorrectEnabled = true,
+                        imeAction = ImeAction.Next,
+                    ),
                 )
                 Spacer(modifier = Modifier.height(15.dp))
 

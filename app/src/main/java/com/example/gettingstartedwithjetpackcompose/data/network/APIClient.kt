@@ -4,8 +4,8 @@ import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
 import com.example.gettingstartedwithjetpackcompose.MyApplication
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.AccountsAPI
-import com.example.gettingstartedwithjetpackcompose.features.authentication.network.AuthApi
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.AccountsAPI
+import com.example.gettingstartedwithjetpackcompose.data.network.authenticationNetwork.AuthApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

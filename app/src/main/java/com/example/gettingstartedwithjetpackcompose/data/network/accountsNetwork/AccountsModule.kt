@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.features.allAccounts.network
+package com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork
 
 import com.example.gettingstartedwithjetpackcompose.data.network.ApiClient
 import dagger.Module

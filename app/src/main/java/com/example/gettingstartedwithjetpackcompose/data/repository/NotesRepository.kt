@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.features.notes.repository
+package com.example.gettingstartedwithjetpackcompose.data.repository
 
 import android.util.Log
 import androidx.datastore.core.DataStore

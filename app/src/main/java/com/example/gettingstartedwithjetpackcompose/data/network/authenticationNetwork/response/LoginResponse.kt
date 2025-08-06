@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.features.authentication.network.response
+package com.example.gettingstartedwithjetpackcompose.data.network.authenticationNetwork.response
 
 data class LoginResponse(
     //val token: String,

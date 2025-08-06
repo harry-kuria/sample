@@ -61,8 +61,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.gettingstartedwithjetpackcompose.R
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.AccountsDto
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.viewModel.DashboardViewModel
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.AccountsDto
+import com.example.gettingstartedwithjetpackcompose.features.allAccounts.DashboardViewModel
 import com.example.gettingstartedwithjetpackcompose.features.navigation.Routes
 
 

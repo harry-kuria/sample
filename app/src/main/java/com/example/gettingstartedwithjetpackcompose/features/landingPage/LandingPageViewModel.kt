@@ -2,7 +2,7 @@ package com.example.gettingstartedwithjetpackcompose.features.landingPage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gettingstartedwithjetpackcompose.features.authentication.repository.UserAuthRepository
+import com.example.gettingstartedwithjetpackcompose.data.repository.UserAuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

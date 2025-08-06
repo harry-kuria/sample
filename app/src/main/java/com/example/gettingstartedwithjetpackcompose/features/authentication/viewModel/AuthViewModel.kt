@@ -5,7 +5,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gettingstartedwithjetpackcompose.data.local.User
-import com.example.gettingstartedwithjetpackcompose.features.authentication.repository.UserAuthRepository
+import com.example.gettingstartedwithjetpackcompose.data.repository.UserAuthRepository
 import com.example.gettingstartedwithjetpackcompose.features.authentication.uiStates.LoginUiState
 import com.example.gettingstartedwithjetpackcompose.features.authentication.uiStates.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

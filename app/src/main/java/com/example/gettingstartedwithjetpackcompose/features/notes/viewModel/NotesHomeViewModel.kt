@@ -3,7 +3,7 @@ package com.example.gettingstartedwithjetpackcompose.features.notes.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gettingstartedwithjetpackcompose.data.local.Note
-import com.example.gettingstartedwithjetpackcompose.features.notes.repository.NotesRepository
+import com.example.gettingstartedwithjetpackcompose.data.repository.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

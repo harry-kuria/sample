@@ -1,7 +1,7 @@
-package com.example.gettingstartedwithjetpackcompose.features.authentication.network
+package com.example.gettingstartedwithjetpackcompose.data.network.authenticationNetwork
 
-import com.example.gettingstartedwithjetpackcompose.features.authentication.network.request.LoginRequest
-import com.example.gettingstartedwithjetpackcompose.features.authentication.network.response.LoginResponse
+import com.example.gettingstartedwithjetpackcompose.data.network.authenticationNetwork.request.LoginRequest
+import com.example.gettingstartedwithjetpackcompose.data.network.authenticationNetwork.response.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

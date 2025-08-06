@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.features.authentication.repository
+package com.example.gettingstartedwithjetpackcompose.data.repository
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -6,7 +6,7 @@ import com.example.gettingstartedwithjetpackcompose.UserAccountData
 import com.example.gettingstartedwithjetpackcompose.data.local.User
 import com.example.gettingstartedwithjetpackcompose.data.local.UserDao
 import com.example.gettingstartedwithjetpackcompose.data.network.ApiClient
-import com.example.gettingstartedwithjetpackcompose.features.authentication.network.request.LoginRequest
+import com.example.gettingstartedwithjetpackcompose.data.network.authenticationNetwork.request.LoginRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

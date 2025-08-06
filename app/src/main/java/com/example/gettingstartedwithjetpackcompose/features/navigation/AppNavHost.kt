@@ -17,7 +17,7 @@ import com.example.gettingstartedwithjetpackcompose.features.authentication.scre
 import com.example.gettingstartedwithjetpackcompose.features.myAccount.MyAccountRoute
 import com.example.gettingstartedwithjetpackcompose.features.notes.screen.EditNoteScreen
 import com.example.gettingstartedwithjetpackcompose.features.allAccounts.screens.AccountsDashboardScreen
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.viewModel.DashboardViewModel
+import com.example.gettingstartedwithjetpackcompose.features.allAccounts.DashboardViewModel
 import com.example.gettingstartedwithjetpackcompose.features.landingPage.LandingRoute
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,7 +62,7 @@ fun AppNavHost(
         composable(Routes.REGISTER) {
             RegisterScreen(
                 onNavigateToLogin = { navController.navigate(Routes.LOGIN) },
-                onNavigateToHome = { navController.navigate(Routes.HOME) }
+                onNavigateToLanding = { navController.navigate(Routes.LANDING) }
             )
         }
 

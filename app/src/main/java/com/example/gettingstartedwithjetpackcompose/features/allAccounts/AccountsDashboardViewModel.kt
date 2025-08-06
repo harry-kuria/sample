@@ -1,11 +1,11 @@
-package com.example.gettingstartedwithjetpackcompose.features.allAccounts.viewModel
+package com.example.gettingstartedwithjetpackcompose.features.allAccounts
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.repository.AccountsRepository
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.AccountsDto
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.FullAccountDetailsDto
+import com.example.gettingstartedwithjetpackcompose.data.repository.AccountsRepository
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.AccountsDto
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.FullAccountDetailsDto
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview

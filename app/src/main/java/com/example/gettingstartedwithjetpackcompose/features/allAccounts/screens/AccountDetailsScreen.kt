@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.viewModel.DashboardViewModel
+import com.example.gettingstartedwithjetpackcompose.features.allAccounts.DashboardViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +114,7 @@ fun AccountDetailsScreen(
                             Text("Created At: ${acc.createdAt}")
                             Text("Updated At: ${acc.updatedAt}")
                             Text("Notes: ${acc.notes ?: "None"}")
-                            HorizontalDivider(Modifier.padding(vertical = 12.dp))
+                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
                         }
 
                         if (acc.wallets.isNotEmpty()) {
@@ -129,11 +129,10 @@ fun AccountDetailsScreen(
                                         Text("- ${wallet.name} ", style = MaterialTheme.typography.titleMedium)
                                         Text("Balance: ${(wallet.currency)?.uppercase()} ${wallet.balance}")
                                         Text("Default Wallet: ${wallet.isDefault == 1}") //returns true if default wallet is 1, false otherwise
-                                        HorizontalDivider(Modifier.padding(vertical = 8.dp))
                                     }
                                 }
                             }
-
+                            item{ HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
                         }
 
                         if (acc.dependants.isNotEmpty()) {
@@ -158,10 +157,12 @@ fun AccountDetailsScreen(
                                             }
                                         }
 
-                                        HorizontalDivider(Modifier.padding(vertical = 8.dp))
+                                        //HorizontalDivider(Modifier.padding(vertical = 8.dp))
                                     }
                                 }
                             }
+
+                            item{ HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
                         }
                     }
                 }

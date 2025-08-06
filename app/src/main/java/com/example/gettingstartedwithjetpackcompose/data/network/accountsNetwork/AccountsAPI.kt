@@ -1,4 +1,4 @@
-package com.example.gettingstartedwithjetpackcompose.features.allAccounts.network
+package com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork
 
 import retrofit2.Response
 import retrofit2.http.GET

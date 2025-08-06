@@ -1,9 +1,9 @@
-package com.example.gettingstartedwithjetpackcompose.features.allAccounts.repository
+package com.example.gettingstartedwithjetpackcompose.data.repository
 
 import android.util.Log
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.AccountsAPI
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.AccountsDto
-import com.example.gettingstartedwithjetpackcompose.features.allAccounts.network.FullAccountDetailsDto
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.AccountsAPI
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.AccountsDto
+import com.example.gettingstartedwithjetpackcompose.data.network.accountsNetwork.FullAccountDetailsDto
 import com.google.gson.Gson
 import javax.inject.Inject
 
