@@ -34,6 +34,26 @@ import androidx.navigation.NavController
 import com.example.gettingstartedwithjetpackcompose.features.allAccounts.DashboardViewModel
 
 
+@Composable
+fun extractAge(age: String?): String {
+    if (age.isNullOrEmpty()) {
+        return "N/A"
+    }
+    val yearsMatch = Regex("(\\d+)y").find(age) // looks for digits followed by 'y'
+    val monthsMatch = Regex("(\\d+)m").find(age) // looks for digits followed by 'm'
+
+    val years = yearsMatch?.groupValues?.get(1)?.toIntOrNull() ?: 0 //if the years is null, return 0
+    val months = monthsMatch?.groupValues?.get(1)?.toIntOrNull() ?: 0 //if the months is null, return 0
+
+    return when {
+        years > 0 -> "$years year${if (years > 1) "s" else ""}"
+        months > 0 -> "$months month${if (months > 1) "s" else ""}"
+        else -> "N/A"
+    }
+
+
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountDetailsScreen(
@@ -129,10 +149,11 @@ fun AccountDetailsScreen(
                                         Text("- ${wallet.name} ", style = MaterialTheme.typography.titleMedium)
                                         Text("Balance: ${(wallet.currency)?.uppercase()} ${wallet.balance}")
                                         Text("Default Wallet: ${wallet.isDefault == 1}") //returns true if default wallet is 1, false otherwise
+                                        HorizontalDivider(Modifier.padding(vertical = 8.dp))
                                     }
                                 }
                             }
-                            item{ HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
+                            //item{ HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
                         }
 
                         if (acc.dependants.isNotEmpty()) {
@@ -144,7 +165,7 @@ fun AccountDetailsScreen(
                             acc.dependants.forEach { dependant ->
                                 item {
                                     Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                                        val ageText = dependant.age?.split(" ")?.take(2)?.joinToString(" ")
+                                        val ageText = extractAge(dependant.age)
                                         Text("- Name of dependant: ${dependant.names}")
                                         Text("  Age: $ageText.")
 
@@ -157,12 +178,11 @@ fun AccountDetailsScreen(
                                             }
                                         }
 
-                                        //HorizontalDivider(Modifier.padding(vertical = 8.dp))
+                                        HorizontalDivider(Modifier.padding(vertical = 8.dp))
                                     }
                                 }
                             }
-
-                            item{ HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
+                            //item{ HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
                         }
                     }
                 }
