@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
         childColumns = ["userId"],
         //onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE)], //when user is deleted, delete all notes
-    indices = [Index(value = ["title"], unique = true), Index(value = ["userId"])]
+    indices = [Index(value = ["userId"])]
 )
 data class Note(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
