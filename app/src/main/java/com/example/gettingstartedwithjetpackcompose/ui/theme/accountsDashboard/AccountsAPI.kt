@@ -8,7 +8,7 @@ interface AccountsAPI {
     @GET("sync/accounts")
     suspend fun getAccounts(
         @Query ("search") query: String? = null,
-    ): Response<AccountsResponse<PaginatedAccountsData>>
+    ): Response<AccountsResponse<AccountsDto>>
 
 //    @GET("sync/accounts")
 //    suspend fun getFullAccountDetails(

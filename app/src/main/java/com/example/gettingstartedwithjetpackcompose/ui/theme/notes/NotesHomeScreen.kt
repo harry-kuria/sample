@@ -27,9 +27,11 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.rememberDismissState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -156,6 +158,15 @@ fun NotesHomeScreen(
                     containerColor = Color(0xFFDE91EA),
                     titleContentColor = Color.Black,
                 ),
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "Back",
+                            tint = Color.Black
+                        )
+                    }
+                },
                 actions = {
                     IconButton(onClick = { navController.navigate(Routes.ACCOUNT_DASHBOARD) }) {
                         Icon(
@@ -168,7 +179,7 @@ fun NotesHomeScreen(
 
                     IconButton(onClick = { navController.navigate(Routes.MY_ACCOUNT) }) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.Default.Person,
                             contentDescription = "My Account",
                             tint = Color.Black,
                             modifier = Modifier.size(40.dp)

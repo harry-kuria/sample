@@ -15,20 +15,17 @@ class AccountsRepository @Inject constructor(private val accountsApi : AccountsA
     }
 
 
-    suspend fun getFullAccountDetails(uuid: String, extraInfo: Boolean): FullAccountDetailsDto {
-        val response = accountsApi.getFullAccountDetails(uuid = uuid, extraInfo = true)
+    suspend fun getFullAccountDetails(uuid: String, extraInfo: Boolean): FullAccountDetailsDto? {
+        val response = accountsApi.getFullAccountDetails(uuid, extraInfo)
         if (response.isSuccessful) {
             val body = response.body()
-            if (body != null && body.data != null) {
-                Log.d("DEBUG", "Account details loaded: ${body.data}")
-                return body.data
-            } else {
-                Log.e("DEBUG", "Empty data: ${body?.message}")
-                throw Exception("Empty account details: ${body?.message}")
-            }
+            val account = body?.data?.data?.firstOrNull()
+            Log.d("DETAILS_API", "Parsed account: ${Gson().toJson(account)}")
+            return account
         } else {
-            Log.e("DEBUG", "Response error: ${response.code()} ${response.message()}")
-            throw Exception("Failed to load account: ${response.code()} ${response.message()}")
+            val errorBody = response.errorBody()?.string()
+            Log.e("DETAILS_API", "Error: ${response.code()} - $errorBody")
+            throw Exception("Failed to load account details. Code: ${response.code()}")
         }
     }
 //suspend fun getFullAccountDetails(uuid: String, extraInfo: Boolean): FullAccountDetailsDto? {

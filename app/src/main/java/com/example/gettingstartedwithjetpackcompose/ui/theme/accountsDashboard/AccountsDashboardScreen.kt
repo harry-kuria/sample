@@ -23,9 +23,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -63,8 +64,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 //Card version
 @Composable
-fun SearchBar( query: String, onQueryChange: (String) -> Unit, onSearch: () -> Unit
-) {
+fun SearchBar( query: String, onQueryChange: (String) -> Unit, onSearch: () -> Unit) {
     val focusManager = LocalFocusManager.current
 
     Box(
@@ -230,6 +230,15 @@ fun AccountsDashboardScreen(
                     containerColor = Color(0xFFDE91EA),
                     titleContentColor = Color.Black,
                 ),
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "Back",
+                            tint = Color.Black
+                        )
+                    }
+                },
                 actions = {
                     IconButton(onClick = { navController.navigate(Routes.HOME) }) {
                         Icon(
@@ -242,7 +251,7 @@ fun AccountsDashboardScreen(
 
                     IconButton(onClick = { navController.navigate(Routes.MY_ACCOUNT) }) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.Default.Person,
                             contentDescription = "My Account",
                             tint = Color.Black,
                             modifier = Modifier.size(40.dp)
@@ -260,10 +269,8 @@ fun AccountsDashboardScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 3.dp)
         ) {
-//            Text("All Users", color = Color.Black,
-//                //textAlign = TextAlign.Center,
-//                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Normal),
-//                modifier = Modifier.fillMaxWidth() .padding(vertical = 16.dp))
+
+            Spacer(modifier = Modifier.height(4.dp))
             SearchBar(
                 query = query,
                 onQueryChange = { viewModel.updateSearchQuery(it) },

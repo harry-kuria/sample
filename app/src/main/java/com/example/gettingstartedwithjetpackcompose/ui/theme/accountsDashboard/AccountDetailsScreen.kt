@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Divider
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,88 +21,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun AccountDetailsScreen(uuid: String, viewModel: DashboardViewModel, navController: NavController) {
-//    val details = viewModel.accountDetails.collectAsState()
-//    val isLoading = viewModel.detailsLoading.collectAsState(initial = true)
-//    val error = viewModel.detailsError.collectAsState()
-//
-//    val account = details.value
-//
-//    LaunchedEffect(uuid) {
-//        viewModel.loadAccountDetails(uuid = uuid)
-//    }
-//
-//    Scaffold(
-//        topBar = { TopAppBar(title = {Text("Account details")},
-//            navigationIcon = { IconButton(onClick = { navController.popBackStack() })  {
-//                Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back") }} )
-//        }
-//    ) { padding ->
-//        when {
-//            isLoading.value -> {
-//                Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-//                    CircularProgressIndicator()
-//                }
-//            }
-//            error.value != null -> {
-//                Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-//                    Text(text = "Error: ${error.value}")
-//                }
-//            }
-//            account != null -> {
-//                LazyColumn(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-//                    item {
-//                        Text("Name: ${account.names}", style = MaterialTheme.typography.titleMedium)
-//                        Text("Gender: ${account.gender}")
-//                        Text("Phone: ${account.phone}")
-//                        Spacer(Modifier.height(16.dp))
-//                    }
-//
-//                    item {
-//                        Text("Wallets", style = MaterialTheme.typography.titleMedium)
-//                        account.wallets.forEach {
-//                            Text("- ${it.name} (${it.currency}) -> ${it.balance}, Default: ${it.isDefault == 1}")
-//                        }
-//                        Spacer(Modifier.height(16.dp))
-//                    }
-//
-//                    item {
-//                        Text("Dependants", style = MaterialTheme.typography.titleMedium)
-//                        account.dependants.forEach {
-//                            Text("- ${it.name}, Age: ${it.age}, Active: ${it.status}")
-//                        }
-//                        Spacer(Modifier.height(16.dp))
-//                    }
-//
-//                    item {
-//                        Text("IOTs", style = MaterialTheme.typography.titleMedium)
-//                        account.iots.forEach { iot ->
-//                            Text("- Serial: ${iot.serialNumber}, Status: ${iot.status}," +
-//                                    " Assignee: ${iot.assignee.name}")
-//                        }
-//                    }
-//                }
-//            }
-//            else -> {
-//                Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-//                    Text("No data available.")
-//                }
-//            }
-//        }
-//
-//    }
-//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +44,6 @@ fun AccountDetailsScreen(
     LaunchedEffect(uuid) {
         Log.d("DETAILS", "Calling loadAccountDetails for uuid = $uuid")
         viewModel.loadAccountDetails(uuid)
-
     }
 
     val account = viewModel.accountDetails.collectAsState()
@@ -121,14 +51,20 @@ fun AccountDetailsScreen(
     val error = viewModel.detailsError.collectAsState()
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Account details") },
+                title = { Text("Account Details") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFFDE91EA),
+                    titleContentColor = Color.Black,
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = Color.Black
                         )
                     }
                 }
@@ -136,100 +72,108 @@ fun AccountDetailsScreen(
         }
     ) { padding ->
 
-        when {
-            account.value != null -> {
-                val acc = account.value!!
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(padding)
-                        .padding(16.dp)
-                        .fillMaxSize()
-                ) {
-                    item {
-                        Text("Name: ${acc.names}", style = MaterialTheme.typography.titleMedium)
-                        Text("Gender: ${acc.gender}")
-                        Text("Phone: ${acc.phone}")
-                        Text("KYC Status: ${acc.kycStatus}")
-                        Text("Account created on: ${acc.createdAt}")
-                        Text("Account updated on: ${acc.updatedAt}")
-                        Text("Notes: ${acc.notes}")
-                        Spacer(Modifier.height(16.dp))
+        Surface(modifier = Modifier.fillMaxSize() .padding(padding), color = Color.White) {
+            when {
+                isLoading.value -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
+                }
+                error.value != null -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Error: ${error.value}")
+                    }
+                }
 
-//                    if (!acc.wallets.isNullOrEmpty()) {
-//                        item {
-//                            Text("Wallets", style = MaterialTheme.typography.titleMedium)
-//                            acc.wallets.forEach { wallet ->
-//                                Column(modifier = Modifier.padding(vertical = 8.dp)) {
-//                                    Text(
-//                                        "- ${wallet.name} (${wallet.currency}) : Balance: ${wallet.balance}"
-//                                    )
-//                                    Text("Default: ${wallet.isDefault == 1}")
-//
-////                                    if (!wallet.iots.isNullOrEmpty()) {
-////                                        Text("IOTs:")
-////                                        wallet.iots.forEach { iot ->
-////                                            Text("- Serial number: ${iot.serialNumber}, Status: ${iot.status}," +
-////                                                    " Assignee: ${iot.assignee?.name}")
-////                                        }
-////                                    }
-//                                }
-//                                Spacer(Modifier.height(16.dp))
-//                            }
-//                        }
-//                    }
+                account.value != null -> {
+                    val acc = account.value!!
 
-                    if (!acc.dependants.isNullOrEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
+                            .padding(16.dp)
+                    ) {
                         item {
-                            Text("Dependants", style = MaterialTheme.typography.titleMedium)
+                            Text("Basic Info", style = MaterialTheme.typography.titleLarge.copy(textDecoration = TextDecoration.Underline))
+                            Spacer(Modifier.height(8.dp))
+                            Text("Name: ${acc.names}")
+                            Text("Gender: ${acc.gender}")
+                            Text("Phone: ${acc.phone}")
+                            Text("KYC Status: ${acc.kycStatus}")
+                            Text("Created At: ${acc.createdAt}")
+                            Text("Updated At: ${acc.updatedAt}")
+                            Text("Notes: ${acc.notes ?: "None"}")
+                            Divider(Modifier.padding(vertical = 12.dp))
+                        }
+
+                        if (!acc.wallets.isNullOrEmpty()) {
+                            item {
+                                Text("Wallets", style = MaterialTheme.typography.titleLarge.copy(textDecoration = TextDecoration.Underline))
+                                Spacer(Modifier.height(8.dp))
+                            }
+
+                            acc.wallets.forEach { wallet ->
+                                item {
+                                    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                        Text("- ${wallet.name} ", style = MaterialTheme.typography.titleMedium)
+                                        Text("Balance: ${(wallet.currency)?.uppercase()} ${wallet.balance}")
+                                        Text("Default Wallet: ${wallet.isDefault == 1}") //returns true if default wallet is 1, false otherwise
+                                        Divider(Modifier.padding(vertical = 8.dp))
+                                    }
+                                }
+                            }
+
+                        }
+
+                        if (!acc.dependants.isNullOrEmpty()) {
+                            item {
+                                Text("Dependants", style = MaterialTheme.typography.titleLarge.copy(textDecoration = TextDecoration.Underline))
+                                Spacer(Modifier.height(8.dp))
+                            }
+
                             acc.dependants.forEach { dependant ->
-                                Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                                    Text("- ${dependant.names}, Age: ${dependant.age}")
-                                    if (dependant.iots.isNotEmpty()) {
-                                        Text("IOTs:")
-                                        dependant.iots.forEach { iot ->
-                                            Text("- Serial number: ${iot.serialNumber}, Status: ${iot.status}," +
-                                                    " Assignee: ${iot.assignee?.name}")
+                                item {
+                                    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                        val ageText = dependant.age?.split(" ")?.take(2)?.joinToString(" ")
+                                        Text("- Name of dependant: ${dependant.names}")
+                                        Text("  Age: $ageText.")
+
+                                        if (!dependant.iots.isNullOrEmpty()) {
+                                            Text("  IOT Devices:")
+                                            dependant.iots.forEach { iot ->
+                                                Text("    - Device Serial Number: ${iot.serialNumber} ")
+                                                Text("      Status: ${iot.status},")
+                                                Text("      Assigned to: ${iot.assignee?.name}")
+                                            }
                                         }
+
+                                        Divider(Modifier.padding(vertical = 8.dp))
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            isLoading.value -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            error.value != null -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Error: ${error.value}")
-                }
-            }
-
-            else -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("No account data available.")
+                else -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("No account data available.")
+                    }
                 }
             }
         }

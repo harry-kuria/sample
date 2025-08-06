@@ -7,10 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountEvent
-import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountScreen
-import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountUiEvent
-import com.example.gettingstartedwithjetpackcompose.ui.theme.myAccount.MyAccountViewModel
 import com.example.gettingstartedwithjetpackcompose.ui.theme.navigation.Routes
 
 @ExperimentalMaterial3Api
@@ -31,6 +27,7 @@ fun LandingRoute(navController: NavController,
     }
 
     LandingScreen(
+        navController = navController,
         username = uiState.username,
         onNotesHomeClick = { viewModel.onEvent(LandingPageEvent.NotesHomeClicked) },
         onAccountsDashboardClick = { viewModel.onEvent(LandingPageEvent.AccountsDashboardClicked) }

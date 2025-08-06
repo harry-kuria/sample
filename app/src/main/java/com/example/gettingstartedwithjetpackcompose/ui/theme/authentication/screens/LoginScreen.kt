@@ -25,7 +25,7 @@ import com.example.gettingstartedwithjetpackcompose.ui.theme.Roboto
 
 
 @Composable
-fun LoginScreen(onNavigateToHome: () -> Unit, viewModel: AuthViewModel = hiltViewModel(),
+fun LoginScreen(onNavigateToLanding: () -> Unit, viewModel: AuthViewModel = hiltViewModel(),
                 onNavigateToRegister: () -> Unit
 ) {
     var showPassword by remember { mutableStateOf(false) }
@@ -35,7 +35,7 @@ fun LoginScreen(onNavigateToHome: () -> Unit, viewModel: AuthViewModel = hiltVie
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
             viewModel.login()
-            onNavigateToHome() //takes us to home screen
+            onNavigateToLanding() //takes us to home screen
             viewModel.clearLoginSuccess()  // resets isLoggedIn flag so we don’t loop
         }
     }

@@ -54,7 +54,7 @@ fun AppNavHost(
 
         composable(Routes.LOGIN) {
             LoginScreen(
-                onNavigateToHome = { navController.navigate(Routes.HOME) },
+                onNavigateToLanding = { navController.navigate(Routes.LANDING) },
                 onNavigateToRegister = { navController.navigate(Routes.REGISTER) }
             )
         }
